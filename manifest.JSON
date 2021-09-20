@@ -3,8 +3,12 @@
     "description": "A Chrome Extension that makes web navigation simple, easy, and convenient for its users.",
     "version": "1.0",
     "manifest_version": 3,
+    "permissions": ["storage","tabs"],
     "omnibox": {
       "keyword": "!"
+    },
+    "background": {
+      "service_worker": "src/background.js"
     },
     "icons":{
       "16":"src/img/KC.png"
