@@ -3,7 +3,9 @@
     "description": "A Chrome Extension that makes web navigation simple, easy, and convenient for its users.",
     "version": "1.0",
     "manifest_version": 3,
-    "permisions": "omnibox",
+    "omnibox": {
+      "keyword": "!"
+    },
     "action": {
       "default_popup": "src/popup.html"
     }
