@@ -1,0 +1,6 @@
+{
+    "name": "KeyCuts",
+    "description": "A Chrome Extension that makes web navigation simple, easy, and convenient for its users.",
+    "version": "Alpha",
+    "manifest_version": 1
+  }
