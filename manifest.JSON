@@ -2,5 +2,9 @@
     "name": "KeyCuts",
     "description": "A Chrome Extension that makes web navigation simple, easy, and convenient for its users.",
     "version": "1.0",
-    "manifest_version": 3
+    "manifest_version": 3,
+    "permisions": "omnibox",
+    "action": {
+      "default_popup": "src/popup.html"
+    }
   }
