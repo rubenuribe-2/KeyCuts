@@ -6,6 +6,9 @@
     "omnibox": {
       "keyword": "!"
     },
+    "icons":{
+      "16":"src/img/KC.png"
+    },
     "action": {
       "default_popup": "src/popup.html"
     }
