@@ -4,8 +4,6 @@
 
 
 let color = '#3aa757';
-console.log(">>>", chrome.omnibox.onInputEntered.addListener);
-
 
 chrome.runtime.onStartup(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
