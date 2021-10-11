@@ -1,0 +1,92 @@
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    color: #424B54;
+}
+body{
+    background: rgb(94,252,141);
+    background: linear-gradient(38deg, rgba(94,252,141,1) 0%, rgba(35,201,255,1) 100%);
+    border-radius: 5px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+button{
+    background: none;
+}
+#onboarding-pic{
+    width: 100px;
+    animation: float 2s infinite alternate ease-in-out;
+}
+@keyframes float{
+    from {transform: translateY(2px);}
+    to {transform: translateY(-2px);}
+}
+header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 40px);
+    height: 50px;
+}
+#settings-btn > img{
+    width: 25px;
+    cursor: pointer;
+}
+#settings-btn > img:hover{
+    transform: rotateZ(360deg);
+    transition: 2s ease-in-out;
+}
+p{
+    font-size: 1.5rem;
+    margin: 10px 50px;
+    text-align: center;
+}
+.flex-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: calc(100% - 40px);
+    padding: 0 20px;
+    margin-bottom: 10px;
+}
+.btn{
+    border-radius: 10px;
+    padding: 10px;
+    color: #FEEFE5;
+    cursor: pointer;
+}
+.btn:hover{
+    transform: scale(1.1);
+    transition: 0.2s;
+
+}
+.affirm{
+    background: #00916E;
+}
+.cancel{
+    background: #EE6352;
+}
+.text-field{
+    border-radius: 10px;    
+    padding: 10px;
+}
+#url-field{
+    width: 200px;
+}
+#KeyCut-field{
+    width: 30px;
+}
+.KeyCut-holder{
+    justify-content: center;
+    align-items: center;
+}
+.KeyCut-holder > *{
+    margin: 5px;
+}
+.bang{
+    margin: 5px;
+}
