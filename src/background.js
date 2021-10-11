@@ -40,3 +40,11 @@ chrome.omnibox.onInputEntered.addListener((text) => {
     var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
     chrome.tabs.NavigateTo({ url: navURL });
   });
+
+document.querySelector('#go-to-options').addEventListener('click', function() {
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL('options.html'));
+    }
+  });
