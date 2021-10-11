@@ -28,3 +28,15 @@ async function  getCurrentTab(){
     let [tab] = await chrome.tabs.query(queryOptions);
     return tab;
 }
+
+chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+    let url = tabs[0].url;
+    // use `url` here inside the callback because it's asynchronous!
+});
+
+chrome.omnibox.onInputEntered.addListener((text) => {
+    // Encode user input for special characters , / ? : @ & = + $ #
+    
+    var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
+    chrome.tabs.NavigateTo({ url: navURL });
+  });
