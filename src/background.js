@@ -5,7 +5,7 @@
 
 let color = '#3aa757';
 
-chrome.runtime.onStartup(()=>{
+chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
 });
