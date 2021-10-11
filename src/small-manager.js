@@ -1,12 +1,16 @@
-url_field = document.getElementById('url-field');
+import {abreviateTab, getActiveTab} from './utils.js';
 
+const url_field = document.getElementById('url-field');
+const kc_field = document.getElementById('KeyCut-field');
 
-chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-
-    // since only one tab should be active and in the current window at once
-    // the return variable should only have one entry
-    var activeTab = tabs[0];
-    url_field.value = activeTab.url;
+getActiveTab().then((activeTab)=>{
     console.log(activeTab);
+    const url = activeTab.url;
+    const protocol = url.split('://');
+    const shortUrl = protocol[0] === "https"? protocol[1] : url 
+    url_field.value = shortUrl;
+    const abv = abreviateTab(activeTab);
+    console.log(abv);
+    kc_field.value = abv;
+});
 
- });
