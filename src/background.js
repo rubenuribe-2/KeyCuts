@@ -62,18 +62,22 @@ async function  getCurrentTab(){
     return tab;
 }
 
-async function getCurrentUrl(){
-    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-        let url = tabs[0].url;
-        // use `url` here inside the callback because it's asynchronous!
-    });
-    return url;
-}
+chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+    let url = tabs[0].url;
+    // use `url` here inside the callback because it's asynchronous!
+});
 
+chrome.omnibox.onInputEntered.addListener((text) => {
+    // Encode user input for special characters , / ? : @ & = + $ #
+    
+    var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
+    chrome.tabs.NavigateTo({ url: navURL });
+  });
 
-
-function getWorkspace() {
-    chrome.storage.sync.get("key", function (obj) {
-        console.log(obj);
-    });
-}
+document.querySelector('#go-to-options').addEventListener('click', function() {
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL('options.html'));
+    }
+  });

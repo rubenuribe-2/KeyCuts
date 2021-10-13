@@ -70,14 +70,22 @@ p{
 .cancel{
     background: #EE6352;
 }
-#url-field{
+.text-field{
     border-radius: 10px;    
     padding: 10px;
+}
+#url-field{
     width: 200px;
+}
+#KeyCut-field{
+    width: 30px;
 }
 .KeyCut-holder{
     justify-content: center;
     align-items: center;
+}
+.KeyCut-holder > *{
+    margin: 5px;
 }
 .bang{
     margin: 5px;
