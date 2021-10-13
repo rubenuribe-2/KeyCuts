@@ -14,13 +14,41 @@ body{
     align-items: center;
     height: 100vh;
 }
-
+th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    border-radius: 10px;
+    text-align: center;
+    height: 50px;
+  }
+th{
+    position: sticky;
+    top: 0;
+    height: 10px;
+}
+tr{
+    max-height: 50px;
+}
+.keycuts-table-header{
+    max-height: 20px;
+}
+.keycuts-table{
+    height: 100vh;
+}
 .tabcontent {
     display: none;
-    padding: 6px 12px;
     border-top: none;
+    height: 100%;
+    overflow-y: scroll;
+    width: 100%;
+    flex-grow: 1;
+    justify-content: center;
 }
-
+#tab-content-container{
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+}
 #tab-container{
     flex: 0.3;
     display: flex;

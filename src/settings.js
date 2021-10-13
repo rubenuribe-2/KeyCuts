@@ -1,12 +1,14 @@
 
 const tabs = document.getElementsByClassName("tablinks");
-console.log(tabs.length);
+
 for (i=0;i<tabs.length;i++){
     tabs[i].addEventListener('click',(evt)=>{
         console.log(evt);
         openTab(evt,evt.currentTarget.name);
     })
 }
+
+tabs[0].click();
 
 function openTab(evt, cityName) {
     console.log("hi");
@@ -26,6 +28,6 @@ function openTab(evt, cityName) {
     }
   
     // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(cityName).style.display = "block";
+    document.getElementById(cityName).style.display = "flex";
     evt.currentTarget.className += " active";
   }
