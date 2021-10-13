@@ -5,10 +5,6 @@
 
 let color = '#3aa757';
 
-chrome.runtime.onStartup(()=>{
-    // Runs each time a profile with KeyCuts Installed is opened
-    // Retrieve keycuts from DB and store in global data structures.
-});
 
 chrome.omnibox.onInputEntered.addListener(function(text){
     console.log(text);
@@ -32,6 +28,10 @@ chrome.omnibox.onInputEntered.addListener(function(text){
     }
     else if(short[0] == 'hd'){
         NavigateTo("https://howdy.tamu.edu");
+    }
+    else if(short[0] == 'ws1'){
+
+
     }
     else{
         NavigateTo("https://canvas.tamu.edu");
@@ -68,4 +68,12 @@ async function getCurrentUrl(){
         // use `url` here inside the callback because it's asynchronous!
     });
     return url;
+}
+
+
+
+function getWorkspace() {
+    chrome.storage.sync.get("key", function (obj) {
+        console.log(obj);
+    });
 }
