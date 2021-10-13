@@ -10,6 +10,69 @@ body{
     border-radius: 5px;
     min-width: 300px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    height: 100vh;
 }
+th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    border-radius: 10px;
+    text-align: center;
+    height: 50px;
+  }
+th{
+    position: sticky;
+    top: 0;
+    height: 10px;
+}
+tr{
+    max-height: 50px;
+}
+.keycuts-table-header{
+    max-height: 20px;
+}
+.keycuts-table{
+    height: 100vh;
+}
+.tabcontent {
+    display: none;
+    border-top: none;
+    height: 100%;
+    overflow-y: scroll;
+    width: 100%;
+    flex-grow: 1;
+    justify-content: center;
+}
+#tab-content-container{
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+}
+#tab-container{
+    flex: 0.3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+.title{
+    text-align: center;
+    margin: 10px;
+    font-size: 3rem;
+}
+.tablinks{
+    flex: 0;
+    flex-grow: 1;
+    font-size: 2rem;
+    background: #FEEFE5CC;
+    transition: 0.2s;
+}
+.tablinks:hover{
+    background: #FEEFE544;
+    font-size: 2.2rem;
+}
+.tablinks.active {
+    transition: 0.2s;
+    background-color: #00000000;
+  }
