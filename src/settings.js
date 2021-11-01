@@ -1,6 +1,23 @@
 
 const tabs = document.getElementsByClassName("tablinks");
-
+const editButten = document.getElementById('toggle-edit');
+const workspaceOrDelete = document.getElementsByClassName('add-to-workspace');
+let editOn = false;
+editButten.addEventListener('click',(e)=>{
+  if(editOn){
+    for(let i = 0; i < workspaceOrDelete.length; i++){
+      workspaceOrDelete[i].innerHTML = '+';
+      workspaceOrDelete[i].classList.toggle('delete');
+    }
+    editOn=false;
+  } else {
+    for(let i = 0; i < workspaceOrDelete.length; i++){
+      workspaceOrDelete[i].innerHTML = '-';
+      workspaceOrDelete[i].classList.toggle('delete');
+    }
+    editOn=true;
+  }
+})
 for (i=0;i<tabs.length;i++){
     tabs[i].addEventListener('click',(evt)=>{
         console.log(evt);
