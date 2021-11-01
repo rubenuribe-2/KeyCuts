@@ -6,7 +6,7 @@
     "permissions": ["storage","tabs"],
     "options_page": "src/options.html",
     "omnibox": {
-      "keyword": "!"
+      "keyword": "@"
     },
     "icons":{
       "16":"src/img/KC.png"
