@@ -70,7 +70,7 @@ tr:nth-of-type(odd){
 }
 .add-to-workspace:hover.delete{
     background: #e73d2686;
-    transform: scale(1.01);
+    transform: scaleX(2);
     color: #2E2E3A;
 }
 #add-new-button{
