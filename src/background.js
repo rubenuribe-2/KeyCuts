@@ -70,9 +70,7 @@ chrome.omnibox.onInputEntered.addListener((text) => {
     }
   } else {
     if(default_spaces[keyCut]){
-      default_spaces[keyCut].items.forEach((item)=>{
-        NavigateTo(item);
-      })
+      openSpace(default_spaces[keyCut].items, keyCut);
     } else{
       navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
     }
@@ -91,6 +89,20 @@ async function NavigateTo(url){
     chrome.tabs.create({url: url, active: true, index: tab.index});
 }
 
+async function openSpace(links,name = ""){
+    const tab = await getCurrentTab();
+    console.log(tab);
+    chrome.tabs.group({tabIds:tab.id},(groupId)=>{
+      chrome.tabGroups.update(groupId,{title: name });
+      chrome.tabs.remove(tab.id);
+      links.forEach(link=>{
+        chrome.tabs.create({url: link,active: true, index: tab.index},(newTab)=>{
+          chrome.tabs.group({groupId: groupId,tabIds: newTab.id});
+        });
+      });
+    }); 
+    
+}
 
 async function  getCurrentTab(){
     //returns the currently focused tab and its metadata
@@ -104,9 +116,3 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     // use `url` here inside the callback because it's asynchronous!
 });
 
-chrome.omnibox.onInputEntered.addListener((text) => {
-  // Encode user input for special characters , / ? : @ & = + $ #
-
-  var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
-  chrome.tabs.NavigateTo({ url: navURL });
-});
