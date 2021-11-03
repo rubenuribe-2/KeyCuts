@@ -43,7 +43,7 @@ const default_keys = {
 
 const default_spaces = {
   "cpstn":{
-    items : ['https://canvas.tamu.edu/courses/103856','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP','https://drive.google.com/drive/u/0/my-drive']
+    items : ['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA','https://github.com/rubenuribe-2/KeyCuts','https://canvas.tamu.edu/courses/103856','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
   }
 }
 
