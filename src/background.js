@@ -20,6 +20,30 @@ const default_keys = {
       none: "https://duckduckgo.com",
       before: "https://duckduckgo.com/?q=",
       after: "",
+  },
+  "z": {
+      shortcut: "z",
+      none: "https://www.zillow.com",
+      before: "https://www.zillow.com/homes/",
+      after: "/",
+  },
+  "a": {
+      shortcut: "a",
+      none: "https://www.amazon.com",
+      before: "https://www.amazon.com/s?k=",
+      after: "",
+  },
+  "ext": {
+      shortcut: "ext",
+      none: "chrome://extensions",
+      before: "chrome://extensions",
+      after: "",
+  }
+}
+
+const default_spaces = {
+  "cpstn":{
+    items : ['https://canvas.tamu.edu/courses/103856','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP','https://drive.google.com/drive/u/0/my-drive']
   }
 }
 
@@ -45,9 +69,17 @@ chrome.omnibox.onInputEntered.addListener((text) => {
       navURL = KeyCut.none;
     }
   } else {
-    navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
+    if(default_spaces[keyCut]){
+      default_spaces[keyCut].items.forEach((item)=>{
+        NavigateTo(item);
+      })
+    } else{
+      navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
+    }
   }
-  NavigateTo(navURL);
+  if(navURL){
+    NavigateTo(navURL);
+  }
 });
 
 async function NavigateTo(url){
