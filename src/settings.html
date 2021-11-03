@@ -6,7 +6,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KeyCuts Settings</title>
 </head>
+<link rel="stylesheet" type="text/css" href="settings.css" media="screen" />
+
 <body>
-    Settings Page
+    <nav id="tab-container">
+        <h1 class="title" >KeyCuts</h1>
+        <button class="tablinks" name="KeyCuts" >KeyCuts</button>
+        <button class="tablinks" name="KeySpaces" >KeySpaces</button>
+        <button class="tablinks" name="Settings" >Settings</button>
+    </nav>
+    <div id="tab-content-container">
+        
+        <div id="KeyCuts" class="tabcontent">
+            <table class="keycuts-table" style="width:100%">
+                <tr class="keycuts-table-header">
+                    <th class="table_key-cut header" style="width: 30%">KeyCut</th>
+                    <th class="table_url header" style="width: 60%">URL</th>
+                    <th class="table_add-to-workspace header" style="width: 10%">add to workspace</th>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="yt" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.youtube.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="g" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.google.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="ddg" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.duckduckgo.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="yt" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.youtube.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="g" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.google.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="ddg" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.duckduckgo.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr><tr>
+                    <td class="keycut-table-cell">!<input type="text" value="yt" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.youtube.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="g" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.google.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="ddg" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.duckduckgo.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr><tr>
+                    <td class="keycut-table-cell">!<input type="text" value="yt" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.youtube.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="g" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.google.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="ddg" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.duckduckgo.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr><tr>
+                    <td class="keycut-table-cell">!<input type="text" value="yt" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.youtube.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="g" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.google.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr>
+                    <td class="keycut-table-cell">!<input type="text" value="ddg" class="text-field keycut-field"></input></td>
+                    <td><input type="text" value="www.duckduckgo.com" class="text-field"></input></td>
+                    <td><button class="add-to-workspace" >+</button></td>
+                </tr>
+                <tr id="add-new">
+                    <td colspan="2"><button id="add-new-button">+</button></td>
+                    <td><button id="toggle-edit" >edit</button></td>                   </td>
+                </tr>
+            </table>
+        </div>
+        <div id="KeySpaces" class="tabcontent">
+            <h3>KeySpaces Content</h3>
+        </div>
+        <div id="Settings" class="tabcontent">
+            <h3>Settings Content</h3>
+        </div>
+    </div>
+    <script src="settings.js">  </script>
 </body>
 </html>
