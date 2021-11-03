@@ -4,17 +4,17 @@
     "version": "1.0",
     "manifest_version": 3,
     "permissions": ["storage","tabs"],
-    "options_page": "src/options.html",
+    "options_page": "options.html",
     "omnibox": {
       "keyword": "!"
     },
     "icons":{
-      "16":"src/img/KC.png"
+      "16":"img/KC.png"
     },
     "action": {
-      "default_popup": "src/popup.html"
+      "default_popup": "popup.html"
     },
     "background": {
-      "service_worker": "src/background.js"
+      "service_worker": "background.js"
     }
   }

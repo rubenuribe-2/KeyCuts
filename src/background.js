@@ -2,53 +2,19 @@
 // Idealy we want this to take care of omnibox and routing the extension to the right place
 // console.log(chrome);
 
-const default_keys = {
-  "yt": {   
-      shortcut: "yt",
-      none: "https://www.youtube.com",
-      before: "https://www.youtube.com/results?search_query=",
-      after: "",
-  },
-  "g": {
-      shortcut: "g",
-      none: "https://www.google.com",
-      before: "https://www.google.com/search?q=",
-      after: "",
-  },
-  "ddg": {
-      shortcut: "ddg",
-      none: "https://duckduckgo.com",
-      before: "https://duckduckgo.com/?q=",
-      after: "",
-  }
-}
 
 let color = '#3aa757';
+
 chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
 });
 
-chrome.omnibox.onInputEntered.addListener((text) => {
-  // Encode user input for special characters , / ? : @ & = + $ #
-  const splitText = text.split(' ');
-  const keyCut = splitText[0];
-  const query = splitText.slice(1).join(' ');
-  console.log({query});
-  let navURL;
-  if(default_keys[keyCut]){
-    const KeyCut = default_keys[keyCut];
-    if(query){
-      navURL = KeyCut.before + encodeURIComponent(query) + KeyCut.after;
-    }
-    else {
-      navURL = KeyCut.none;
-    }
-  } else {
-    navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
-  }
-  NavigateTo(navURL);
-});
+chrome.omnibox.onInputEntered.addListener(function(text){
+    console.log(text);
+    NavigateTo("https://www.youtube.com"); //should select correct url down the line
+})
+
 
 async function NavigateTo(url){
     //navigates current tab to url
@@ -73,8 +39,19 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
 });
 
 chrome.omnibox.onInputEntered.addListener((text) => {
-  // Encode user input for special characters , / ? : @ & = + $ #
+    // Encode user input for special characters , / ? : @ & = + $ #
+    
+    var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
+    chrome.tabs.NavigateTo({ url: navURL });
+  });
 
-  var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
-  chrome.tabs.NavigateTo({ url: navURL });
-});
+document.querySelector('#go-to-options').addEventListener('click', function() {
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL('options.html'));
+    }
+  });
+
+
+

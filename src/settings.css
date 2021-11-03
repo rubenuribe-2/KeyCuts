@@ -5,7 +5,7 @@
     color: #424B54;
 }
 body{
-    background: rgb(94,252,141);
+    background: rgb(94, 252, 141);
     background: linear-gradient(38deg, rgba(94,252,141,1) 0%, rgba(35,201,255,1) 100%);
     border-radius: 5px;
     min-width: 300px;
