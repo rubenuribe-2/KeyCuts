@@ -116,10 +116,3 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     // use `url` here inside the callback because it's asynchronous!
 });
 
-// chrome.omnibox.onInputEntered.addListener((text) => {
-//   // Encode user input for special characters , / ? : @ & = + $ #
-
-//   var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
-//   chrome.tabs.NavigateTo({ url: navURL });
-// });
-
