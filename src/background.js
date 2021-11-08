@@ -1,6 +1,6 @@
 // This file will run in the background
 // Idealy we want this to take care of omnibox and routing the extension to the right place
-// console.log(chrome);
+
 
 const default_keys = {
   "yt": {   
@@ -48,6 +48,16 @@ const default_spaces = {
 }
 
 let color = '#3aa757';
+
+chrome.runtime.onInstalled.addListener(()=>{
+  //runs when the function is updated or installed for the first time
+  chrome.storage.sync.set({KeyCuts: default_keys}, function() {
+    console.log('KeyCuts is set to ' + default_keys);
+    console.log(default_keys);
+  });
+})
+
+
 chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
