@@ -47,47 +47,6 @@ const default_spaces = {
   }
 }
 
-<<<<<<< HEAD
-
-chrome.omnibox.onInputEntered.addListener(function(text){
-    console.log(text);
-    const short = parseText(text);
-    if(short[0] == 'yt'){
-        if(short.length > 1){
-            short.splice(0,1);
-            let yt_url  = "https://www.youtube.com";
-            let temp = '';
-            let sq = short[0];
-            for(let i = 0; i < short.length - 1; i++){
-                temp = sq.concat('+', short[i+1]);
-                sq = temp;
-            }
-            let yt_sq = yt_url.concat('/results?search_query=',sq);
-            NavigateTo(yt_sq);
-        }
-        else{
-            NavigateTo("https://www.youtube.com");
-        }
-    }
-    else if(short[0] == 'hd'){
-        NavigateTo("https://howdy.tamu.edu");
-    }
-    else if(short[0] == 'ws1'){
-
-
-    }
-    else{
-        NavigateTo("https://canvas.tamu.edu");
-    }
-    //should select correct url down the line
-})
-
-function parseText(text){
-    const words = text.split(" ");
-    return words;
-}
-
-=======
 let color = '#3aa757';
 chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
@@ -122,7 +81,6 @@ chrome.omnibox.onInputEntered.addListener((text) => {
     NavigateTo(navURL);
   }
 });
->>>>>>> 1cd0c1e80c8c27ec54106d141b0943c3077a13b2
 
 async function NavigateTo(url){
     //navigates current tab to url
@@ -146,25 +104,13 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     // use `url` here inside the callback because it's asynchronous!
 });
 
-chrome.omnibox.onInputEntered.addListener((text) => {
-<<<<<<< HEAD
-    // Encode user input for special characters , / ? : @ & = + $ #
-    
-    var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
-    chrome.tabs.NavigateTo({ url: navURL });
+/* getCurrentTab().then(res=>{
+  chrome.storage.local.set({key: res.url}, function() {
+      console.log('Value is set to ' + res.url);
   });
-
-document.querySelector('#go-to-options').addEventListener('click', function() {
-    if (chrome.runtime.openOptionsPage) {
-      chrome.runtime.openOptionsPage();
-    } else {
-      window.open(chrome.runtime.getURL('options.html'));
-    }
+  chrome.storage.sync.get(['key'], function(result) {
+      console.log('Value currently is ' + result.key);
   });
-=======
-  // Encode user input for special characters , / ? : @ & = + $ #
-
-  var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
-  chrome.tabs.NavigateTo({ url: navURL });
-});
->>>>>>> 1cd0c1e80c8c27ec54106d141b0943c3077a13b2
+  
+})
+ */
