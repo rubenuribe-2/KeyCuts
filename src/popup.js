@@ -1,6 +1,6 @@
 // This file will take care of general settings stuff for all popup pages.
 
-openSettings = document.getElementById("settings-btn");
+const openSettings = document.getElementById("settings-btn");
 
 if (openSettings){
     openSettings.addEventListener("click",()=>{
