@@ -157,3 +157,6 @@ tr:nth-of-type(odd){
     width: 30px;
     margin-left: 10px;
 }
+.url-field{
+    width: 80%;
+}

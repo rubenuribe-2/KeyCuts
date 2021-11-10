@@ -51,10 +51,7 @@ let color = '#3aa757';
 
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
-  chrome.storage.sync.set({KeyCuts: default_keys}, function() {
-    console.log('KeyCuts is set to ' + default_keys);
-    console.log(default_keys);
-  });
+  chrome.storage.sync.set({KeyCuts: default_keys}, function() {});
 })
 
 
