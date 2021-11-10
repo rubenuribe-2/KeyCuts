@@ -41,46 +41,9 @@ const default_keys = {
   }
 }
 
-const default_spaces = {
-  "cpstn":{
-    items : ['https://canvas.tamu.edu/courses/103856','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP','https://drive.google.com/drive/u/0/my-drive']
-  }
-}
-
 let color = '#3aa757';
-chrome.runtime.onStartup.addListener(()=>{
-    // Runs each time a profile with KeyCuts Installed is opened
-    // Retrieve keycuts from DB and store in global data structures.
-});
 
-chrome.omnibox.onInputEntered.addListener((text) => {
-  // Encode user input for special characters , / ? : @ & = + $ #
-  const splitText = text.split(' ');
-  const keyCut = splitText[0];
-  const query = splitText.slice(1).join(' ');
-  console.log({query});
-  let navURL;
-  if(default_keys[keyCut]){
-    const KeyCut = default_keys[keyCut];
-    if(query){
-      navURL = KeyCut.before + encodeURIComponent(query) + KeyCut.after;
-    }
-    else {
-      navURL = KeyCut.none;
-    }
-  } else {
-    if(default_spaces[keyCut]){
-      default_spaces[keyCut].items.forEach((item)=>{
-        NavigateTo(item);
-      })
-    } else{
-      navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
-    }
-  }
-  if(navURL){
-    NavigateTo(navURL);
-  }
-});
+
 
 async function NavigateTo(url){
     //navigates current tab to url
@@ -104,13 +67,13 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     // use `url` here inside the callback because it's asynchronous!
 });
 
-/* getCurrentTab().then(res=>{
-  chrome.storage.local.set({key: res.url}, function() {
-      console.log('Value is set to ' + res.url);
-  });
-  chrome.storage.sync.get(['key'], function(result) {
-      console.log('Value currently is ' + result.key);
-  });
-  
-})
- */
+chrome.omnibox.onInputEntered.addListener((text) => {
+    // Encode user input for special characters , / ? : @ & = + $ #
+    
+  var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
+  chrome.tabs.NavigateTo({ url: navURL });
+});
+
+chrome.storage.sync.get(['key'], function(result) {
+    console.log('Value currently is ' + result.key);
+});
