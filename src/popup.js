@@ -6,7 +6,7 @@ if (openSettings){
     openSettings.addEventListener("click",()=>{
         chrome.tabs.create({
             active: true,
-            url:  '/src/settings.html'
+            url:  '/settings.html'
           }, null);
     })
 }
