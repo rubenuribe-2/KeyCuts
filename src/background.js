@@ -61,6 +61,7 @@ chrome.runtime.onStartup.addListener(()=>{
 });
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
+  t0 = performance.now() | 0;
   const splitText = text.split(' ');
   const keyCut = splitText[0];
   const query = splitText.slice(1).join(' ');
@@ -84,6 +85,8 @@ function searchOmnibox(text){
   if(navURL){
     NavigateTo(navURL);
   }
+  t1 = performance.now() | 0;
+  console.log(`navigating took ${t1-t0}ms ${t0} ${t1}`);
 }
 
 chrome.omnibox.onInputEntered.addListener(searchOmnibox);
