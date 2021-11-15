@@ -59,8 +59,7 @@ chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
 });
-
-chrome.omnibox.onInputEntered.addListener((text) => {
+function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
   const splitText = text.split(' ');
   const keyCut = splitText[0];
@@ -85,7 +84,11 @@ chrome.omnibox.onInputEntered.addListener((text) => {
   if(navURL){
     NavigateTo(navURL);
   }
-});
+}
+
+chrome.omnibox.onInputEntered.addListener(searchOmnibox);
+
+
 
 async function NavigateTo(url){
     //navigates current tab to url

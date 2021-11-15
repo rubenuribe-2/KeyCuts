@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/rubenuribe-2/KeyCuts#readme",
   "dependencies": {
-    "puppeteer": "^11.0.0"
+    "puppeteer": "^11.0.0",
+    "selenium-webdriver": "^4.0.0"
   }
 }
