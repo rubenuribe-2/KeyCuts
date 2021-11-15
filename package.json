@@ -1,0 +1,22 @@
+{
+  "name": "keycuts",
+  "version": "1.0.0",
+  "description": "# Instructions to add extension to Chrome for testing:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubenuribe-2/KeyCuts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rubenuribe-2/KeyCuts/issues"
+  },
+  "homepage": "https://github.com/rubenuribe-2/KeyCuts#readme",
+  "dependencies": {
+    "puppeteer": "^11.0.0"
+  }
+}

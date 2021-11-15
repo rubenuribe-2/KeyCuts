@@ -22,10 +22,10 @@ if (createKC){
             const url = activeTab.url;
             const protocol = url.split('://');
             const shortUrl = protocol[0] === "https"? protocol[1] : url 
-            const abv = abreviateTab(activeTab);
+            var abv = abreviateTab(activeTab);
             console.log('shortUrl ' + shortUrl);
             console.log('abv ' + abv);
-            chrome.storage.local.set({abv: shortUrl}, function() {
+            chrome.storage.local.set({[abv]: shortUrl}, function() {
             console.log('Value is set to ' + shortUrl);
         });
     });
