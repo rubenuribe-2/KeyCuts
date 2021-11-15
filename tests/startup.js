@@ -1,12 +1,6 @@
-// test that extension speed of searching vs manual 
-// import timer from './timer.js';
-// import puppeteer from 'puppeteer';
+// tests wether extension loads successfully
 const { assert } = require('console');
 const puppeteer = require('puppeteer');
-
-
-
-
 
 
 (async () => {
@@ -18,27 +12,16 @@ const puppeteer = require('puppeteer');
             `--load-extension=${pathToExtension}`,
         ],
     });
-
-
     const dummyPage = await browser.newPage();
-    // await dummyPage.waitForTimeout(2000); // arbitrary wait time.
-    // dummyPage.goto('! yt howdy');
+
     const targets = await browser.targets();
     const extensionTarget = targets.find(({ _targetInfo }) => {
         return  _targetInfo.type === 'service_worker';
     });
     console.assert(extensionTarget,"extension failed to innitialize");
-    console.log({extensionTarget});
     //gets the extension ID of the target
     const [,,extensionID,] = extensionTarget._targetInfo.url.split('/');
-    console.log({extensionID});
 
-    const backgroundPage = await extensionTarget.worker();
-    const t0 = performance.now()
-    // backgroundPage.evaluate("searchOmnibox",'! yt howdy');
-    const t1 = performance.now()
-    dummyPage.waitForTimeout(3000);
-    console.log(t1-t0);
-    // console.log(backgroundPage);
-    // await browser.close();
-  })();
+    await browser.close();
+    console.log("test completed")
+})();
