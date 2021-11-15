@@ -41,16 +41,13 @@ const default_keys = {
   }
 }
 
-<<<<<<< HEAD
-let color = '#3aa757';
-=======
+
 const default_spaces = {
   "cpstn":{
     items : ['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA','https://github.com/rubenuribe-2/KeyCuts','https://canvas.tamu.edu/courses/103856','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
   }
 }
 
-let color = '#3aa757';
 
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
@@ -62,10 +59,10 @@ chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
 });
->>>>>>> 04181bf0a1137f54e6916e49e58c46c5ebd6386e
 
-chrome.omnibox.onInputEntered.addListener((text) => {
+function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
+  t0 = performance.now() | 0;
   const splitText = text.split(' ');
   const keyCut = splitText[0];
   const query = splitText.slice(1).join(' ');
@@ -89,7 +86,13 @@ chrome.omnibox.onInputEntered.addListener((text) => {
   if(navURL){
     NavigateTo(navURL);
   }
-});
+  t1 = performance.now() | 0;
+  console.log(`navigating took ${t1-t0}ms ${t0} ${t1}`);
+}
+
+chrome.omnibox.onInputEntered.addListener(searchOmnibox);
+
+
 
 async function NavigateTo(url){
     //navigates current tab to url
