@@ -41,9 +41,6 @@ const default_keys = {
   }
 }
 
-<<<<<<< HEAD
-let color = '#3aa757';
-=======
 const default_spaces = {
   "cpstn":{
     items : ['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA','https://github.com/rubenuribe-2/KeyCuts','https://canvas.tamu.edu/courses/103856','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
@@ -55,6 +52,7 @@ let color = '#3aa757';
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
   chrome.storage.sync.set({KeyCuts: default_keys}, function() {});
+  
 })
 
 
@@ -62,7 +60,6 @@ chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
 });
->>>>>>> 04181bf0a1137f54e6916e49e58c46c5ebd6386e
 
 chrome.omnibox.onInputEntered.addListener((text) => {
   // Encode user input for special characters , / ? : @ & = + $ #
