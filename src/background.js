@@ -41,7 +41,10 @@ const default_keys = {
   }
 }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6a9ab063dcb3c97e664afd159c703b9e91b2f949
 const default_spaces = {
   "cpstn":{
     items : ['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA','https://github.com/rubenuribe-2/KeyCuts','https://canvas.tamu.edu/courses/103856','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
@@ -52,6 +55,7 @@ const default_spaces = {
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
   chrome.storage.sync.set({KeyCuts: default_keys}, function() {});
+  
 })
 
 

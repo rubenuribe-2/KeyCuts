@@ -18,15 +18,18 @@ const createKC = document.getElementById("keycut-btn");
 if (createKC){
     createKC.addEventListener("click",()=>{
         getActiveTab().then((activeTab)=>{
-            console.log(activeTab);
-            const url = activeTab.url;
-            const protocol = url.split('://');
-            const shortUrl = protocol[0] === "https"? protocol[1] : url 
-            var abv = abreviateTab(activeTab);
-            console.log('shortUrl ' + shortUrl);
-            console.log('abv ' + abv);
-            chrome.storage.local.set({[abv]: shortUrl}, function() {
-            console.log('Value is set to ' + shortUrl);
+            chrome.storage.sync.get(['KeyCuts'], function({KeyCuts} = keycut){
+                const abv = kc_field.value.split(" ").join("");
+                const shortUrl = url_field.value;
+                console.log(KeyCuts);
+                KeyCuts[abv] =  {none:shortUrl,shortcut:abv,before:"",after:""}; //before and after need values
+                console.log(KeyCuts);
+                chrome.storage.sync.set({"KeyCuts": KeyCuts}, function() {
+                console.log('Value is set to ' + shortUrl);
+
+            }
+            )
+            
         });
     });
     })
