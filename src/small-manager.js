@@ -89,6 +89,7 @@ if (createKC){
         const noSearchUrl = url_field.value.search("://") === -1 ? "https://" + url_field.value: url_field.value;
         const searchURL = storeKC(url_field.value);
         if(!kc_exists()){
+            //for making a new keyCut
             kc = abv;
             addKeyCut({shortcut:abv, none: noSearchUrl, before: searchURL});
             createKC.innerText = `Update '${kc}' KeyCut`;            

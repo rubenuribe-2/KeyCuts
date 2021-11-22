@@ -115,7 +115,7 @@ export async function abreviateTab(tab){ // -> String
 export async function storeKC(url){
     const tURL = getActiveURL();
     const splits = [];
-    const bURL;
+    var bURL;
   
     if (tURL.contains("q=")){
       splits = tURL.split("q=");
