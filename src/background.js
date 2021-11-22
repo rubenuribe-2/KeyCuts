@@ -2,7 +2,6 @@
 // Idealy we want this to take care of omnibox and routing the extension to the right place
 // import default_keys from "default-keys.js"
 
-
 var default_keys = {
   "yt": {   
       shortcut: "yt",
@@ -55,12 +54,10 @@ chrome.runtime.onInstalled.addListener(()=>{
 })
 
 
-
 chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
 });
-
 
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
@@ -133,24 +130,6 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
 });
 
 
-chrome.omnibox.onInputEntered.addListener((text) => {
-    // Encode user input for special characters , / ? : @ & = + $ #
-    
-    var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
-    chrome.tabs.NavigateTo({ url: navURL });
-  });
-
-document.querySelector('#go-to-options').addEventListener('click', function() {
-    if (chrome.runtime.openOptionsPage) {
-      chrome.runtime.openOptionsPage();
-    } else {
-      window.open(chrome.runtime.getURL('options.html'));
-    }
-  });
-
-
-
-
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
@@ -172,17 +151,17 @@ function getURL(){
     console.log(activeTab);
     const url = activeTab.url;
   });
-  return url;
+  return url.toString();
 
 };
 
 function storeKC(url){
-  String tURL = getURL();
-  String [] splits;
-  var bURL;
-  var eURL;
-  var aURL;
-  var parsingCode;
+  const tURL = getURL();
+  const splits = [];
+  const bURL;
+  const eURL;
+  const aURL;
+  const parsingCode;
 
   if (tURL.contains("q=")){
     splits = tURL.split("q=");
@@ -204,9 +183,9 @@ function storeKC(url){
       parsingCode = 1;
     }
   }
-  else if (tURL.contains("search?q=")){
-    splits = tURL.split("search?q=");
-    bURL = splits[0].concat("search?q=");
+  else if (tURL.contains("search_query=")){
+    splits = tURL.split("search_query=");
+    bURL = splits[0].concat("search_query=");
     if (splits[1].contains("+")){
       parsingCode = 0;
     }
@@ -216,3 +195,17 @@ function storeKC(url){
   }
   return { bURL, parsingCode };
 };
+
+function KCtoURL(pCode, bURL, queries){
+  let url = bURL;
+  if ( pCode == 0 ){
+    for (const q in queries){
+      url.concat(q);
+      url.concat("+");
+    }
+    url.substring(0, str.length - 1);
+  }
+  else if ( pCode == 1) {
+    url.concat(encodeURIComponent(queries));
+  }
+}
