@@ -110,3 +110,35 @@ export async function abreviateTab(tab){ // -> String
 
 
 }
+
+
+export async function storeKC(url){
+    const tURL = getActiveURL();
+    const splits = [];
+    const bURL;
+  
+    if (tURL.contains("q=")){
+      splits = tURL.split("q=");
+      bURL = splits[0].concat("q=");
+    }
+    else if (tURL.contains("search?=")){
+      splits = tURL.split("search?=");
+      bURL = splits[0].concat("search?=");
+    }
+    else if (tURL.contains("search_query=")){
+      splits = tURL.split("search_query=");
+      bURL = splits[0].concat("search_query=");
+    }
+    return bURL;
+};
+  
+export async function KCtoURL(bURL, queries){
+    let url = bURL;
+    if ( pCode == 0 ){
+      for (const q in queries){
+        url.concat(encodeURIComponent(q));
+        url.concat(" ");
+      }
+      url.substring(0, str.length - 1);
+    }
+};

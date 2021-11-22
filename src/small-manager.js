@@ -1,4 +1,4 @@
-import {abreviateTab, getActiveTab, addKeyCut} from './utils.js';
+import {abreviateTab, getActiveTab, addKeyCut, storeKC} from './utils.js';
 
 const url_field = document.getElementById('url-field');
 const kc_field = document.getElementById('KeyCut-field');
@@ -86,14 +86,15 @@ if (createKC){
     createKC.addEventListener("click",()=>{
         const abv = kc_field.value.split(" ").join("");
         // re append protocall if it was https\/
-        const shortUrl = url_field.value.search("://") === -1 ? "https://" + url_field.value: url_field.value;
+        const noSearchUrl = url_field.value.search("://") === -1 ? "https://" + url_field.value: url_field.value;
+        const searchURL = storeKC(url_field.value);
         if(!kc_exists()){
             kc = abv;
-            addKeyCut({shortcut:abv, none: shortUrl});
+            addKeyCut({shortcut:abv, none: noSearchUrl, before: searchURL});
             createKC.innerText = `Update '${kc}' KeyCut`;            
         } else {
             //update?
-            addKeyCut({shortcut:abv, none:shortUrl});
+            addKeyCut({shortcut:abv, none: noSearchUrl});
         }
     });
 }
@@ -128,3 +129,6 @@ kc_field.addEventListener("input",(e)=>{
     }
     
 })
+
+
+  
