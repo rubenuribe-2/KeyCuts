@@ -145,3 +145,53 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
     
   }
 });
+function getURL(){
+
+  getActiveTab().then((activeTab)=>{
+    console.log(activeTab);
+    const url = activeTab.url;
+  });
+  return url;
+
+};
+
+function storeKC(url){
+  String tURL = getURL();
+  String [] splits;
+  var bURL;
+  var eURL;
+  var aURL;
+  var parsingCode;
+
+  if (tURL.contains("q=")){
+    splits = tURL.split("q=");
+    bURL = splits[0].concat("q=");
+    if (splits[1].contains("+")){
+      parsingCode = 0;
+    }
+    if (splits[1].contains("%")){
+      parsingCode = 1;
+    }
+  }
+  else if (tURL.contains("search?=")){
+    splits = tURL.split("search?=");
+    bURL = splits[0].concat("search?=");
+    if (splits[1].contains("+")){
+      parsingCode = 0;
+    }
+    if (splits[1].contains("%")){
+      parsingCode = 1;
+    }
+  }
+  else if (tURL.contains("search?q=")){
+    splits = tURL.split("search?q=");
+    bURL = splits[0].concat("search?q=");
+    if (splits[1].contains("+")){
+      parsingCode = 0;
+    }
+    if (splits[1].contains("%")){
+      parsingCode = 1;
+    }
+  }
+  return { bURL, parsingCode };
+};
