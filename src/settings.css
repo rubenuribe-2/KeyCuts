@@ -15,35 +15,112 @@ body{
     height: 100vh;
 }
 th, td {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     border-collapse: collapse;
-    border-radius: 10px;
     text-align: center;
-    height: 50px;
+    height: 70px;
+    color: #FEEFE5;
   }
-th{
+td{
+    border-left: 1px inset #FEEFE5;
+    border-right: 1px inset #FEEFE5;
+}
+td:first-child{
+    border-left: none;
+}
+td:last-child{
+    border-right: none;
+}
+
+tr{
+    background: #424B54;
+}
+
+.keycuts-table-header{
     position: sticky;
     top: 0;
+    height: 75px;
+    color: #2E2E3A;
+    background: #5EFC8D !important;
+}
+.hidden{
+    display: none;
+}
+.not-saved{
+    background: #e73d26 !important;
+}
+tr:not(.hidden):nth-of-type(odd){
+    background: #2E2E3A;
+}
+#table-spacer{
+    max-height: none;
+}
+
+#add-new{
     height: 10px;
+    position: sticky;
+    bottom: 0;  
 }
-tr{
-    max-height: 50px;
+.add-to-workspace{
+    transition: 0.1s ease-in-out;
+    width: 100%;
+    height: 100%;
+    background: none;
+    color: #FEEFE5;
 }
-.keycuts-table-header{
-    max-height: 20px;
+.add-to-workspace:hover{
+    background: #5efc8d86;
+    
+    transform: scale(1.01);
+    color: #2E2E3A;
+}
+.add-to-workspace:hover.delete{
+    background: #e73d2686;
+    transform: scaleX(2);
+    color: #2E2E3A;
+}
+#add-new-button{
+    width: 100%;
+    height: 100%;
+    background: #5EFC8D;
+    transition: 0.1s ease-in-out;
+}
+#add-new-button:hover{
+    transform: scaleY(1.2);
+    background: #74ff9e;
+}
+#add-new > td{
+    color: #2E2E3A;
+}
+#toggle-edit{
+    width: 100%;
+    height: 100%;
+    background: #EB4833;
+    color: #2E2E3A;
+}
+#toggle-edit:hover{
+    transform: scaleY(1.2);
+    background: #e73d26;
+}
+
+.keycuts-table-header > th{
+    color: #2E2E3A;
 }
 .keycuts-table{
     height: 100vh;
+    border-collapse: collapse;
 }
 .tabcontent {
     display: none;
-    border-top: none;
     height: 100%;
     overflow-y: scroll;
     width: 100%;
     flex-grow: 1;
     justify-content: center;
 }
+.tabcontent::-webkit-scrollbar {
+    display: none;
+  }
 #tab-content-container{
     flex: 1;
     flex-direction: column;
@@ -76,3 +153,17 @@ tr{
     transition: 0.2s;
     background-color: #00000000;
   }
+.keycut-table-cell{
+    font-size: 1.2rem;
+}
+.text-field{
+    border-radius: 10px;
+    padding: 10px;
+}
+.keycut-field{
+    width: 50px;
+    margin-left: 10px;
+}
+.url-field{
+    width: 80%;
+}
