@@ -132,13 +132,3 @@ export async function storeKC(url){
     return bURL;
 };
   
-export async function KCtoURL(bURL, queries){
-    let url = bURL;
-    if ( pCode == 0 ){
-      for (const q in queries){
-        url.concat(encodeURIComponent(q));
-        url.concat(" ");
-      }
-      url.substring(0, str.length - 1);
-    }
-};
