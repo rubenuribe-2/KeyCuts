@@ -1,6 +1,7 @@
 // This file will run in the background
 // Idealy we want this to take care of omnibox and routing the extension to the right place
 // import default_keys from "default-keys.js"
+"use strict";
 
 var default_keys = {
   "yt": {   
@@ -50,7 +51,7 @@ const default_spaces = {
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
   chrome.storage.sync.set({KeyCuts: default_keys}, function() {});
-  
+  chrome.storage.sync.set({KeySpaces: default_spaces},function(){});
 })
 
 
