@@ -2,6 +2,7 @@
 // Idealy we want this to take care of omnibox and routing the extension to the right place
 // import default_keys from "default-keys.js"
 
+
 var default_keys = {
   "yt": {   
       shortcut: "yt",
@@ -54,10 +55,12 @@ chrome.runtime.onInstalled.addListener(()=>{
 })
 
 
+
 chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
 });
+
 
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
@@ -128,6 +131,24 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     let url = tabs[0].url;
     // use `url` here inside the callback because it's asynchronous!
 });
+
+
+chrome.omnibox.onInputEntered.addListener((text) => {
+    // Encode user input for special characters , / ? : @ & = + $ #
+    
+    var navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
+    chrome.tabs.NavigateTo({ url: navURL });
+  });
+
+document.querySelector('#go-to-options').addEventListener('click', function() {
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL('options.html'));
+    }
+  });
+
+
 
 
 
