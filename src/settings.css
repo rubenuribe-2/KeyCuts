@@ -43,7 +43,13 @@ tr{
     color: #2E2E3A;
     background: #5EFC8D !important;
 }
-tr:nth-of-type(odd){
+.hidden{
+    display: none;
+}
+.not-saved{
+    background: #e73d26 !important;
+}
+tr:not(.hidden):nth-of-type(odd){
     background: #2E2E3A;
 }
 #table-spacer{
@@ -96,6 +102,7 @@ tr:nth-of-type(odd){
     transform: scaleY(1.2);
     background: #e73d26;
 }
+
 .keycuts-table-header > th{
     color: #2E2E3A;
 }
@@ -154,7 +161,7 @@ tr:nth-of-type(odd){
     padding: 10px;
 }
 .keycut-field{
-    width: 30px;
+    width: 50px;
     margin-left: 10px;
 }
 .url-field{
