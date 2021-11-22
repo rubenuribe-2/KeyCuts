@@ -10,7 +10,11 @@ let beforeUrls_set = {};
 let urls = [];
 let beforeUrls = [];
 
-let kc_exists = false;
+let kc = "";
+
+function kc_exists(){
+    return kc !== "";
+} 
 
 function checkUrl(){
     getActiveTab().then((activeTab)=>{
@@ -23,8 +27,8 @@ function checkUrl(){
         const ifCut = getCut(url);
         if(ifCut){
             //this url exists in our KeyCut Db
-            kc_exists = true;
-            createKC.innerText = 'Update KeyCut';
+            kc = ifCut;
+            createKC.innerText = `Update '${kc}' KeyCut`;
             const shortcut = keyCuts[ifCut].shortcut;
             kc_field.value = shortcut;
             url_field.value = shortUrl;
@@ -33,6 +37,7 @@ function checkUrl(){
             abreviateTab(activeTab).then((abv)=>{
                 console.log(abv);
                 kc_field.value = abv;
+                createKC.innerText = `Make '${abv}' KeyCut`;
             });   
         }
          
@@ -79,15 +84,47 @@ chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
 
 if (createKC){
     createKC.addEventListener("click",()=>{
-        if(!kc_exists){
-            const abv = kc_field.value.split(" ").join("");
-            // re append protocall if it was https\/
-            const shortUrl = url_field.value.search("://") === -1 ? "https://" + url_field.value: url_field.value;
+        const abv = kc_field.value.split(" ").join("");
+        // re append protocall if it was https\/
+        const shortUrl = url_field.value.search("://") === -1 ? "https://" + url_field.value: url_field.value;
+        if(!kc_exists()){
+            kc = abv;
             addKeyCut({shortcut:abv, none: shortUrl});
-            kc_exists = true;
-            createKC.innerText = 'Update KeyCut';            
+            createKC.innerText = `Update '${kc}' KeyCut`;            
         } else {
             //update?
+            addKeyCut({shortcut:abv, none:shortUrl});
         }
     });
 }
+
+kc_field.addEventListener("input",(e)=>{
+    console.log(e)
+    const src_elem = e.srcElement;
+    src_elem.value = src_elem.value.split(' ').join('');
+    const value = src_elem.value;
+    if(value === ""){
+        createKC.classList.add('deactive');
+        createKC.innerText = ':(';
+        return;
+    } else {
+        createKC.classList.remove('deactive');
+    }
+    console.log(keyCuts[kc]);
+    console.log(keyCuts[value]);
+    if(keyCuts[value] && keyCuts[value] != keyCuts[kc]){
+        //there is a kc conflict
+        createKC.classList.add('conflict');
+        createKC.innerText = `Replace '${value}' KeyCut`;
+    } 
+    else if (keyCuts[value] == keyCuts[kc]) {
+        // all good this key cut is available or is the current key cut
+        createKC.innerText = `Update '${value}' KeyCut`;
+        createKC.classList.remove('conflict')
+        
+    } else if (!keyCuts[value]){
+        createKC.innerText = `Make '${value}' KeyCut`;
+        createKC.classList.remove('conflict')
+    }
+    
+})
