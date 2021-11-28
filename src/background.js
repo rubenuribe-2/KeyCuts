@@ -3,55 +3,33 @@
 // import default_keys from "default-keys.js"
 "use strict";
 
-var default_keys = {
-  "yt": {   
-      shortcut: "yt",
-      none: "https://www.youtube.com/",
-      before: "https://www.youtube.com/results?search_query=",
-      after: "",
-  },
-  "g": {
-      shortcut: "g",
-      none: "https://www.google.com/",
-      before: "https://www.google.com/search?q=",
-      after: "",
-  },
-  "ddg": {
-      shortcut: "ddg",
-      none: "https://duckduckgo.com/",
-      before: "https://duckduckgo.com/?q=",
-      after: "",
-  },
-  "z": {
-      shortcut: "z",
-      none: "https://www.zillow.com/",
-      before: "https://www.zillow.com/homes/",
-      after: "/",
-  },
-  "a": {
-      shortcut: "a",
-      none: "https://www.amazon.com/",
-      before: "https://www.amazon.com/s?k=",
-      after: "",
-  },
-  "ext": {
-      shortcut: "ext",
-      none: "chrome://extensions/",
-      before: "chrome://extensions",
-      after: "",
-  }
-}
-const default_spaces = {
-  "cpstn":{
-    items : ['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA/','https://github.com/rubenuribe-2/KeyCuts/','https://canvas.tamu.edu/courses/103856/','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
-  }
-}
-
+var default_keys;
+var default_spaces;
 
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
-  chrome.storage.sync.set({KeyCuts: default_keys}, function() {});
-  chrome.storage.sync.set({KeySpaces: default_spaces},function(){});
+
+  console.log("importing default-keys");
+  var default_keys_url = chrome.runtime.getURL('./defaults/default-keys.json');
+
+  fetch(default_keys_url)
+  .then((response) => response.json())
+  .then((json_default_keys) => {
+    default_keys = json_default_keys;
+    chrome.storage.sync.set({KeyCuts: default_keys}, function() {})
+  });
+
+
+  console.log("importing default-spaces");
+  var default_spaces_url = chrome.runtime.getURL('./defaults/default-spaces.json');
+
+  fetch(default_spaces_url)
+  .then((response) => response.json())
+  .then((json_default_spaces) => {
+    default_spaces = json_default_spaces;
+    chrome.storage.sync.set({KeySpaces: default_spaces}, function() {})
+  });
+
 })
 
 
@@ -62,7 +40,7 @@ chrome.runtime.onStartup.addListener(()=>{
 
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
-  t0 = performance.now() | 0;
+  const t0 = performance.now() | 0;
   const splitText = text.split(' ');
   const keyCut = splitText[0];
   const query = splitText.slice(1).join(' ');
@@ -86,7 +64,7 @@ function searchOmnibox(text){
   if(navURL){
     NavigateTo(navURL);
   }
-  t1 = performance.now() | 0;
+  const t1 = performance.now() | 0;
   console.log(`navigating took ${t1-t0}ms ${t0} ${t1}`);
 }
 
@@ -122,8 +100,8 @@ async function openSpace(links,name = ""){
           chrome.tabs.group({groupId: groupId,tabIds: newTab.id});
         });
       });
-    }); 
-    
+    });
+
 }
 
 async function  getCurrentTab(){
@@ -151,6 +129,6 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
       console.log(newValue);
       default_keys = newValue;
     }
-    
+
   }
 });
