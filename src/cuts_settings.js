@@ -102,9 +102,17 @@ chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
   }
 });
 
+newCutButton.addEventListener("click",(e)=>{
+  if(!document.getElementById('newCut')){
+    newCut('newCut',{none: ''} );
+  }
+  
+})
+
 function newCut(cutName, cutProps){
   const TableRow = document.createElement('tr');
-
+  TableRow.id = cutName;
+  TableRow.classList.add('not-saved');
   const keyCut_short = document.createElement('td');
   keyCut_short.classList.add('keycut-table-cell');
   keyCut_short.innerHTML='!';
