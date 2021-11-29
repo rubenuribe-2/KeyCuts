@@ -3,8 +3,21 @@
 // import default_keys from "default-keys.js"
 "use strict";
 
-var default_keys;
-var default_spaces;
+// Where we will expose all the data we retrieve from storage.sync.
+var storageCache = {};
+var default_keys = {};
+var default_spaces = {};
+
+// Asynchronously retrieve data from storage.sync, then cache it.
+const initStorageCache = getAllStorageSyncData().then(items => {
+  // Copy the data retrieved from storage into storageCache.
+  Object.assign(storageCache, items);
+  default_keys = storageCache.KeyCuts;
+  default_spaces = storageCache.KeySpaces;
+
+  console.log("done fetching all data from storage");
+});
+
 
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
@@ -15,8 +28,7 @@ chrome.runtime.onInstalled.addListener(()=>{
   fetch(default_keys_url)
   .then((response) => response.json())
   .then((json_default_keys) => {
-    default_keys = json_default_keys;
-    chrome.storage.sync.set({KeyCuts: default_keys}, function() {})
+    chrome.storage.sync.set({KeyCuts: json_default_keys}, function() {})
   });
 
 
@@ -26,17 +38,39 @@ chrome.runtime.onInstalled.addListener(()=>{
   fetch(default_spaces_url)
   .then((response) => response.json())
   .then((json_default_spaces) => {
-    default_spaces = json_default_spaces;
-    chrome.storage.sync.set({KeySpaces: default_spaces}, function() {})
+    chrome.storage.sync.set({KeySpaces: json_default_spaces}, function() {})
   });
 
 })
 
 
-chrome.runtime.onStartup.addListener(()=>{
-    // Runs each time a profile with KeyCuts Installed is opened
-    // Retrieve keycuts from DB and store in global data structures.
+chrome.runtime.onStartup.addListener(async ()=>{
+  try {
+    await initStorageCache;
+  } catch (e) {
+    // Handle error that occurred during storage initialization.
+  }
+  // Normal action handler logic.
 });
+
+// Reads all data out of storage.sync and exposes it via a promise.
+//
+// Note: Once the Storage API gains promise support, this function
+// can be greatly simplified.
+function getAllStorageSyncData() {
+  // Immediately return a promise and start asynchronous work
+  return new Promise((resolve, reject) => {
+    // Asynchronously fetch all data from storage.sync.
+    chrome.storage.sync.get(null, (items) => {
+      // Pass any observed errors down the promise chain.
+      if (chrome.runtime.lastError) {
+        return reject(chrome.runtime.lastError);
+      }
+      // Pass the data retrieved from storage down the promise chain.
+      resolve(items);
+    });
+  });
+}
 
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
@@ -49,9 +83,8 @@ function searchOmnibox(text){
   if(default_keys[keyCut]){
     const KeyCut = default_keys[keyCut];
     if(query){
-      navURL = KCtoURL(KeyCut.before, query);
-    }
-    else {
+      navURL = KCtoURL(KeyCut, query);
+    } else {
       navURL = KeyCut.none;
     }
   } else {
@@ -70,19 +103,14 @@ function searchOmnibox(text){
 
 chrome.omnibox.onInputEntered.addListener(searchOmnibox);
 
-function KCtoURL(bURL, queries){
-  let url = bURL;
-  for (const q in queries){
-      url.concat(encodeURIComponent(q));
-      url.concat(" ");
-  }
-  url.substring(0, str.length - 1);
-  return url;
+
+function KCtoURL(KeyCut, query){
+  return KeyCut.before + encodeURIComponent(query) + KeyCut.after;
 };
 
 async function NavigateTo(url){
-    //navigates current tab to url
-    //really it closes the current tab and creates a new one in the same place
+    // navigates current tab to url
+    // really it closes the current tab and creates a new one in the same place
     const tab = await getCurrentTab();
     console.log(tab);
     chrome.tabs.remove(tab.id);
@@ -127,7 +155,7 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
       );
       chrome.storage.sync.set({"!!!": Object.keys(newValue)});
       console.log(newValue);
-      default_keys = newValue;
+      storageCache.KeyCuts = newValue;
     }
 
   }
