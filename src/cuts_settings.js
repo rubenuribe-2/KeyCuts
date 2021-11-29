@@ -38,11 +38,14 @@ function onKeyCutChange(e){
     src_elem.value = src_elem.value.split(' ').join('');
     const row = src_elem.parentNode.parentNode;
     console.log(row);
+
     const id = row.id;
     const keyCut = keyCuts[id];
     if(!checkSame(row,keyCut)){
+        row.getElementsByClassName('multi-btn')[0].classList.add('save');
         row.classList.add('not-saved'); //display that the keyCut is currently not saved
     } else {
+        row.getElementsByClassName('multi-btn')[0].classList.remove('save');
         row.classList.remove('not-saved'); //show that the current keyCut is saved
     }
     const cut_name = id.slice(4);
@@ -59,7 +62,10 @@ function clickAddorDelete(e){
   const src_elem = e.srcElement;
   const id = src_elem.id;
   const cut_name = id.slice(4);
-  if(e.srcElement.classList.contains('delete')){
+  if(e.srcElement.classList.contains('save')){
+    console.log("should save kC");
+  }
+  else if(e.srcElement.classList.contains('delete')){
     console.log ('should remove', cut_name);
     deleteKeyCut(cut_name).then((old_cut)=>{
       del_history.push(old_cut);
@@ -148,6 +154,7 @@ function newCut(cutName, cutProps){
   const keyCut_btn = document.createElement('button');
   keyCut_btn.innerHTML = '+';
   keyCut_btn_cell.addEventListener('click',clickAddorDelete);
+  keyCut_btn_cell.classList.add('multi-btn');
   keyCut_btn.classList.add('add-to-workspace');
 
   keyCut_btn_cell.appendChild(keyCut_btn);
@@ -196,6 +203,8 @@ function addCut(cutName, cutProps){
   const keyCut_btn = document.createElement('button');
   keyCut_btn.innerHTML = '+';
   keyCut_btn_cell.addEventListener('click',clickAddorDelete);
+  keyCut_btn_cell.classList.add('multi-btn');
+  keyCut_btn_cell.classList.add('save');
   keyCut_btn.classList.add('add-to-workspace');
   keyCut_btn.id= "btn-"+cutName;
 
