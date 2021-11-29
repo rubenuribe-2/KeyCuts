@@ -77,7 +77,7 @@ function searchOmnibox(text){
     }
   } else {
     if(default_spaces[keyCut]){
-      openSpace(default_spaces[keyCut].items, keyCut);
+      openSpace(default_spaces[keyCut], keyCut);
     } else{
       navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
     }
