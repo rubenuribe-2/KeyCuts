@@ -70,7 +70,7 @@ function searchOmnibox(text){
   if(default_keys[keyCut]){
     const KeyCut = default_keys[keyCut];
     if(query){
-      navURL = KCtoURL(KeyCut.before, query);
+      navURL = KCtoURL(KeyCut, query);
     }
     else {
       navURL = KeyCut.none;
@@ -91,14 +91,8 @@ function searchOmnibox(text){
 
 chrome.omnibox.onInputEntered.addListener(searchOmnibox);
 
-function KCtoURL(bURL, queries){
-  let url = bURL;
-  for (const q in queries){
-      url.concat(encodeURIComponent(q));
-      url.concat(" ");
-  }
-  url.substring(0, str.length - 1);
-  return url;
+function KCtoURL(KeyCut, query){
+  return KeyCut.before + encodeURIComponent(query) + KeyCut.after;
 };
 
 async function NavigateTo(url){
