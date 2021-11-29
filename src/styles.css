@@ -59,13 +59,14 @@ p{
     color: #FEEFE5;
     cursor: pointer;
 }
-.btn:hover{
+.btn:not(.deactive):hover{
     transform: scale(1.1);
     transition: 0.2s;
 
 }
 .affirm{
     background: #00916E;
+    transition: 0.2s;
 }
 .cancel{
     background: #EE6352;
@@ -89,4 +90,11 @@ p{
 }
 .bang{
     margin: 5px;
+}
+.conflict{
+    background: #EE6352;
+}
+.deactive{
+    background: #2E2E3A;
+    cursor: initial
 }

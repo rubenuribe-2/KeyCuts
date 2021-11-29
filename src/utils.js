@@ -1,6 +1,7 @@
 // common utility functions that can be used throughout app :)
 
 
+
 export async function getActiveTab(){ // -> Tab
     //gets the active Tab
     // returns: Tab https://developer.chrome.com/docs/extensions/reference/tabs/#type-Tab
@@ -17,6 +18,40 @@ export async function getActiveUrl(){// -> String
     });
     
 }
+
+export function addKeyCut(keyCut){
+    // adds a new KeyCut to chrome Storage
+    /* keyCut {
+        shortcut: "", req;
+        none: "url",
+        before: "url search prefix",
+        after "url search suffix",
+    } */
+    console.assert(keyCut.shortcut,"addKeyCut(keyCut) KeyCut must contain key shortcut");
+    chrome.storage.sync.get(['KeyCuts'], function({KeyCuts} = keycut){
+        const abv = keyCut.shortcut.split(" ").join(""); //assure that there are no spaces in KeyCut
+        KeyCuts[abv] =  {none:keyCut.none||"",shortcut:abv,before:keyCut.before||"",after: keyCut.after||""}; //before and after need values
+        chrome.storage.sync.set({"KeyCuts": KeyCuts}, function() { });
+    });
+}
+
+export async function deleteKeyCut(shortcut){
+    // deletes a KeyCut from chrome Storage
+    // shortcut : string;
+    //returns the deleted keyCut
+    let keyCut = new Promise((res)=>{
+        chrome.storage.sync.get(['KeyCuts'], function({KeyCuts} = keycut){
+            console.log(KeyCuts[shortcut]);
+            res(KeyCuts[shortcut]);
+            delete KeyCuts[shortcut];
+            chrome.storage.sync.set({"KeyCuts": KeyCuts}, function() { });
+        });
+    });
+    console.log(keyCut);
+    return await keyCut;
+    
+}
+
 const commonSubDomains= [
     'www',
     'blog',
@@ -40,19 +75,60 @@ function relaventSubDomain(subdomain){
     return relaventSubDomains.includes(subdomain);
 }
 
-export function abreviateTab(tab){ // -> String
+export async function abreviateTab(tab){ // -> String
     // Takes in a tab and returns a non conflicting abreviation
-    const url = tab.url;
-    const noProt = url.split("://")[1];
-    const baseUrl = noProt.split('/')[0];
-    const parts = baseUrl.split('.');
-    let abv = "";
-    if(commonSubDomain(parts[0])){
-        abv = parts[1].slice(0,3);
-    } else {
-        abv = parts[0].slice(0,3);
-    }
-    return abv;
+    const abrev = new Promise((res)=>{
+        chrome.storage.sync.get("!!!",(cuts)=>{
+            const set_cuts = cuts["!!!"];
+            console.log(set_cuts);
+            const url = tab.url;
+            const noProt = url.split("://")[1];
+            const baseUrl = noProt.split('/')[0];
+            const parts = baseUrl.split('.');
+            let abv = "";
+            let base = 1;
+            if(commonSubDomain(parts[0])){
+                const abv_ = parts[1].slice(0,3);
+                abv = abv_;
+                while (set_cuts.includes(abv)){
+                    abv = abv_ + base;
+                    base++;
+                }
+            } else {
+                const abv_ = parts[0].slice(0,3);
+                abv = abv_;
+                while (set_cuts.includes(abv)){
+                    abv = abv_ + base;
+                    base++;
+                }
+            }
+            res(abv);
+        });
+    });
+    return await abrev;
+    
 
 
 }
+
+
+export async function storeKC(url){
+    const tURL = getActiveURL();
+    const splits = [];
+    var bURL;
+  
+    if (tURL.contains("q=")){
+      splits = tURL.split("q=");
+      bURL = splits[0].concat("q=");
+    }
+    else if (tURL.contains("search?=")){
+      splits = tURL.split("search?=");
+      bURL = splits[0].concat("search?=");
+    }
+    else if (tURL.contains("search_query=")){
+      splits = tURL.split("search_query=");
+      bURL = splits[0].concat("search_query=");
+    }
+    return bURL;
+};
+  
