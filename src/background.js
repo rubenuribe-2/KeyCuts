@@ -41,10 +41,6 @@ var default_keys = {
       after: "",
   }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 7c8743cede10839e774fd3fd61eaacca3bfbf9c6
 const default_spaces = {
   "cpstn":{
     items : ['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA/','https://github.com/rubenuribe-2/KeyCuts/','https://canvas.tamu.edu/courses/103856/','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
