@@ -18,7 +18,6 @@ const initStorageCache = getAllStorageSyncData().then(items => {
   console.log("done fetching all data from storage");
 });
 
-
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
 
@@ -89,7 +88,7 @@ function searchOmnibox(text){
     }
   } else {
     if(default_spaces[keyCut]){
-      openSpace(default_spaces[keyCut].items, keyCut);
+      openSpace(default_spaces[keyCut], keyCut);
     } else{
       navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
     }
@@ -102,7 +101,6 @@ function searchOmnibox(text){
 }
 
 chrome.omnibox.onInputEntered.addListener(searchOmnibox);
-
 
 function KCtoURL(KeyCut, query){
   return KeyCut.before + encodeURIComponent(query) + KeyCut.after;
