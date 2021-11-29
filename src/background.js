@@ -42,9 +42,8 @@ var default_keys = {
   }
 }
 const default_spaces = {
-  "cpstn":{
-    items : ['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA/','https://github.com/rubenuribe-2/KeyCuts/','https://canvas.tamu.edu/courses/103856/','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
-  }
+  "cpstn":['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA/','https://github.com/rubenuribe-2/KeyCuts/','https://canvas.tamu.edu/courses/103856/','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
+
 }
 
 
@@ -62,7 +61,7 @@ chrome.runtime.onStartup.addListener(()=>{
 
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
-  t0 = performance.now() | 0;
+  const t0 = performance.now() | 0;
   const splitText = text.split(' ');
   const keyCut = splitText[0];
   const query = splitText.slice(1).join(' ');
@@ -71,14 +70,14 @@ function searchOmnibox(text){
   if(default_keys[keyCut]){
     const KeyCut = default_keys[keyCut];
     if(query){
-      navURL = KCtoURL(KeyCut.before, query);
+      navURL = KCtoURL(KeyCut, query);
     }
     else {
       navURL = KeyCut.none;
     }
   } else {
     if(default_spaces[keyCut]){
-      openSpace(default_spaces[keyCut].items, keyCut);
+      openSpace(default_spaces[keyCut], keyCut);
     } else{
       navURL = 'https://www.google.com/search?q=' + encodeURIComponent(text);
     }
@@ -86,20 +85,14 @@ function searchOmnibox(text){
   if(navURL){
     NavigateTo(navURL);
   }
-  t1 = performance.now() | 0;
+  const t1 = performance.now() | 0;
   console.log(`navigating took ${t1-t0}ms ${t0} ${t1}`);
 }
 
 chrome.omnibox.onInputEntered.addListener(searchOmnibox);
 
-function KCtoURL(bURL, queries){
-  let url = bURL;
-  for (const q in queries){
-      url.concat(encodeURIComponent(q));
-      url.concat(" ");
-  }
-  url.substring(0, str.length - 1);
-  return url;
+function KCtoURL(KeyCut, query){
+  return KeyCut.before + encodeURIComponent(query) + KeyCut.after;
 };
 
 async function NavigateTo(url){

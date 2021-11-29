@@ -102,7 +102,7 @@ chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
   }
 });
 
-function newCut(){
+function newCut(cutName, cutProps){
   const TableRow = document.createElement('tr');
 
   const keyCut_short = document.createElement('td');
