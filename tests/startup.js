@@ -21,7 +21,8 @@ const puppeteer = require('puppeteer');
     console.assert(extensionTarget,"extension failed to innitialize");
     //gets the extension ID of the target
     const [,,extensionID,] = extensionTarget._targetInfo.url.split('/');
-
-    await browser.close();
+    const settings = await browser.newPage(); 
+    await settings.goto('chrome-extension://'+extensionID+'/settings.html');
+    // await browser.close();
     console.log("test completed")
 })();

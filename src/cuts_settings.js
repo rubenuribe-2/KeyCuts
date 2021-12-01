@@ -21,11 +21,20 @@ function clickedRow(e){ //fired when a keycut row is clicked
     }
 
 }
+
+function KCfromRow(row){
+  const shortcut = row.getElementsByClassName('keycut-field')[0].value;
+  const none = row.getElementsByClassName('url-field')[0].value;
+  const before = row.getElementsByClassName('before-field')[0].value;
+  const after = row.getElementsByClassName('after-field')[0].value;
+
+  return {shortcut: shortcut, none: none, before: before, after: after};
+}
+
 function checkSame(row,keyCut){ //checks a given row (HTML table row object) is in sync with the keyCut object
-    console.log(row.getElementsByClassName('keycut-field')[0].value)
-    console.log(row.getElementsByClassName('url-field')[0].value)
-    console.log(keyCut)
-    if(row.getElementsByClassName('keycut-field')[0].value === keyCut.shortcut && row.getElementsByClassName('url-field')[0].value === keyCut.none){
+    const newKC = KCfromRow(row);
+    console.log(newKC);
+    if(newKC.shortcut === keyCut.shortcut && newKC.none === keyCut.none && newKC.before == keyCut.before && newKC.after == keyCut.after){
         console.log('istrue')
         row.classList.remove('not-saved'); 
     } else {
@@ -33,11 +42,17 @@ function checkSame(row,keyCut){ //checks a given row (HTML table row object) is 
     }
 }
 
+function getRowFromField(field){
+  const row = field.classList.contains('keycut-field')? 
+              field.parentNode.parentNode:
+              field.parentNode.parentNode.parentNode.parentNode;
+  return row;
+}
+
 function onKeyCutChange(e){
     //fires when a keycuts shortcut or url text box is changed
-    const src_elem = e.srcElement;
-    src_elem.value = src_elem.value.split(' ').join('');
-    const row = src_elem.parentNode.parentNode;
+    e.srcElement.value = e.srcElement.value.split(' ').join('');
+    const row = getRowFromField(e.srcElement);
     console.log(row);
 
     const id = row.id;
@@ -86,21 +101,20 @@ function deleteCut(e){
 function saveCut(e){
   const btnElem = getBtnElem(e.srcElement);
   const row = btnElem.parentNode.parentNode;
-  const cutName = row.getElementsByClassName('keycut-field')[0].value;
-  const newValue = row.getElementsByClassName('url-field')[0].value;
+  const newKC = KCfromRow(row);
   if(row.id == 'newCut'){
     //save it
-    row.id = cutName;
-    addKeyCut({shortcut: cutName, none: newValue});
+    row.id = newKC.shortcut;
+    addKeyCut(newKC);
 
-  } else if (row.id == cutName) {
+  } else if (row.id == newKC.shortcut) {
     //replace it
-    addKeyCut({shortcut: cutName, none: newValue});
+    addKeyCut(newKC);
 
   } else {
     //delete old
     deleteKeyCut(row.id);
-    addKeyCut({shortcut: cutName, none: newValue});
+    addKeyCut(newKC);
     //save new
   }
   row.classList.remove('not-saved');
@@ -112,12 +126,16 @@ function reloadCut(e){
   const row = btnElem.parentNode.parentNode;
   const shortcut_field = row.getElementsByClassName('keycut-field')[0];
   const url_field = row.getElementsByClassName('url-field')[0];
+  const before_field = row.getElementsByClassName('before-field')[0];
+  const after_field = row.getElementsByClassName('after-field')[0];
   if(row.id == 'newCut'){
     shortcut_field.value = '';
     url_field.value = '';
   } else {
     shortcut_field.value = row.id;
     url_field.value = keyCuts[row.id].none;
+    before_field.value = keyCuts[row.id].before;
+    after_field.value = keyCuts[row.id].after;
   }
   checkSame(row,keyCuts[row.id]);
   console.log('reload this cut');
@@ -149,10 +167,82 @@ chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
 
 newCutButton.addEventListener("click",(e)=>{
   if(!document.getElementById('newCut')){
-    newCut('newCut',{none: ''} );
+    newCut('newCut',{none: '', shortcut: '', before: '', after: ''} );
   }
   
 })
+
+function moreBtn(e){
+  console.log('more btn clicked');
+  const btnElem = getBtnElem(e.srcElement);
+  const holder = btnElem.parentNode.parentNode;
+  holder.classList.toggle('advanced');
+}
+
+function createUrlFields(cutProps){
+
+  const keyCut_none = document.createElement('td');
+
+  
+  
+
+  
+  const holder = document.createElement('div');
+  holder.classList.add('cut-field-holder');
+  
+  const topFields = document.createElement('div');
+  topFields.classList.add('top-fields');
+  const bottomFields = document.createElement('div');
+  bottomFields.classList.add('bottom-fields');
+
+  holder.appendChild(topFields);
+  holder.appendChild(bottomFields);
+
+  keyCut_none.appendChild(holder);
+
+
+  const keyCut_none_input = document.createElement('input');
+  keyCut_none_input.addEventListener('input',onKeyCutChange);
+  keyCut_none_input.value = cutProps.none;
+  keyCut_none_input.classList.add("text-field");
+  keyCut_none_input.classList.add("url-field");
+  keyCut_none_input.type = "text";
+  
+  topFields.appendChild(keyCut_none_input);
+
+  const more = document.createElement('button');
+  more.classList.add('more-btn');
+  more.addEventListener('click',moreBtn);
+  const more_img = document.createElement('img');
+  more_img.classList.add('more-img'); 
+  more_img.src = 'img/more.png';
+  more_img.alt = 'more options';
+
+  more.appendChild(more_img);
+  topFields.appendChild(more);
+
+  const keyCut_before_input = document.createElement('input');
+  keyCut_before_input.addEventListener('input',onKeyCutChange);
+  keyCut_before_input.value = cutProps.before;
+  keyCut_before_input.classList.add("text-field");
+  keyCut_before_input.classList.add("before-field");
+
+  bottomFields.appendChild(keyCut_before_input);
+
+  const query = document.createElement('p');
+  query.innerHTML = '{Query}';
+  bottomFields.appendChild(query);
+
+
+  const keyCut_after_input = document.createElement('input');
+  keyCut_after_input.addEventListener('input',onKeyCutChange);
+  keyCut_after_input.value = cutProps.after;
+  keyCut_after_input.classList.add("text-field");
+  keyCut_after_input.classList.add("after-field");
+
+  bottomFields.appendChild(keyCut_after_input);
+  return keyCut_none;
+}
 
 function createMultiBtn(cutName="newCut"){
   const keyCut_btn_cell = document.createElement('td');
@@ -221,16 +311,7 @@ function newCut(cutName, cutProps){
   keyCut_short.appendChild(keyCut_short_input);
   TableRow.appendChild(keyCut_short);
 
-  const keyCut_none = document.createElement('td');
-
-  const keyCut_none_input = document.createElement('input');
-  keyCut_none_input.value = cutProps.none;
-  keyCut_none_input.classList.add("text-field");
-  keyCut_none_input.classList.add("url-field");
-  keyCut_none_input.type = "text";
-  
-
-  keyCut_none.appendChild(keyCut_none_input);
+  const keyCut_none = createUrlFields(cutProps);
 
   TableRow.appendChild(keyCut_none);
 
@@ -261,16 +342,7 @@ function addCut(cutName, cutProps){
   keyCut_short_input.id= "srt-"+cutName;
   TableRow.appendChild(keyCut_short);
 
-  const keyCut_none = document.createElement('td');
-
-  const keyCut_none_input = document.createElement('input');
-  keyCut_none_input.value = cutProps.none;
-  keyCut_none_input.type = "text";
-  keyCut_none_input.classList.add("text-field");
-  keyCut_none_input.classList.add("url-field");
-  keyCut_none_input.addEventListener("input",onKeyCutChange);
-  keyCut_none_input.id= "url-"+cutName;
-  keyCut_none.appendChild(keyCut_none_input);
+  const keyCut_none = createUrlFields(cutProps);
 
   TableRow.appendChild(keyCut_none);
 
