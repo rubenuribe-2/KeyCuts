@@ -52,6 +52,29 @@ export async function deleteKeyCut(shortcut){
     
 }
 
+export function getBtnElem(elem){
+    const btnElem = elem.nodeName== "IMG"? elem.parentNode : elem;
+    return btnElem
+  }
+
+export function addKeySpace(keySpace, list){
+    chrome.storage.sync.get(['KeySpaces'], function({KeySpaces}=keyspaces){
+        KeySpaces[keySpace] = list;
+        chrome.storage.sync.set({"KeySpaces": KeySpaces})
+    });
+}
+
+export async function deleteKeySpace(shortcut){
+    let keySpace = new Promise((res)=>{
+        chrome.storage.sync.get(['KeySpaces'],function({KeySpaces}=keyspaces){
+            res(KeySpaces[shortcut]);
+            delete KeySpaces[shortcut];
+            chrome.storage.sync.set({'KeySpaces': KeySpaces},function() { });
+        });
+    });
+    return await keySpace;
+}
+
 const commonSubDomains= [
     'www',
     'blog',

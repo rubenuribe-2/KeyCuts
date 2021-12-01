@@ -41,7 +41,7 @@ var default_keys = {
       after: "",
   }
 }
-const default_spaces = {
+var default_spaces = {
   "cpstn":['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA/','https://github.com/rubenuribe-2/KeyCuts/','https://canvas.tamu.edu/courses/103856/','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
 
 }
@@ -57,6 +57,10 @@ chrome.runtime.onInstalled.addListener(()=>{
 chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
+    chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
+      default_keys = KeyCuts;
+    });
+    chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{default_spaces = KeySpaces})
 });
 
 function searchOmnibox(text){
@@ -110,7 +114,7 @@ async function openSpace(links,name = ""){
     chrome.tabs.group({tabIds:tab.id},(groupId)=>{
       chrome.tabGroups.update(groupId,{title: name });
       chrome.tabs.remove(tab.id);
-      links.forEach(link=>{
+      links.reverse().forEach(link=>{
         chrome.tabs.create({url: link,active: true, index: tab.index},(newTab)=>{
           chrome.tabs.group({groupId: groupId,tabIds: newTab.id});
         });
@@ -140,9 +144,10 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
         `Storage key "${key}" in namespace "${namespace}" changed.`,
         `Old value was "${oldValue?.KeyCuts}", new value is "${newValue}".`
       );
-      chrome.storage.sync.set({"!!!": Object.keys(newValue)});
-      console.log(newValue);
+      // chrome.storage.sync.set({"!!!": Object.keys(newValue)});
       default_keys = newValue;
+    } else if (key === "KeySpaces"){
+      default_spaces = newValue;
     }
     
   }

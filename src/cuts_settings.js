@@ -1,11 +1,12 @@
-import { addKeyCut, deleteKeyCut } from './utils.js';
+import { addKeyCut, deleteKeyCut, getBtnElem } from './utils.js';
 
-const editButten = document.getElementById('toggle-edit');
 const newCutButton = document.getElementById('add-new-button');
-const workspaceOrDelete = document.getElementsByClassName('add-to-workspace');
+const KeyCutsTable = document.getElementById('keycuts-tbl').lastChild;
 
-let editOn = false;
+const workspaceOrDelete = KeyCutsTable.getElementsByClassName('add-to-workspace');
+
 var keyCuts;
+var spaces;
 let del_history = [];
 let elem_history = [];
 function clickedRow(e){ //fired when a keycut row is clicked
@@ -26,9 +27,9 @@ function checkSame(row,keyCut){ //checks a given row (HTML table row object) is 
     console.log(keyCut)
     if(row.getElementsByClassName('keycut-field')[0].value === keyCut.shortcut && row.getElementsByClassName('url-field')[0].value === keyCut.none){
         console.log('istrue')
-        return true;
+        row.classList.remove('not-saved'); 
     } else {
-        return false;
+      row.classList.add('not-saved');
     }
 }
 
@@ -41,14 +42,7 @@ function onKeyCutChange(e){
 
     const id = row.id;
     const keyCut = keyCuts[id];
-    if(!checkSame(row,keyCut)){
-        row.getElementsByClassName('multi-btn')[0].classList.add('save');
-        row.classList.add('not-saved'); //display that the keyCut is currently not saved
-    } else {
-        row.getElementsByClassName('multi-btn')[0].classList.remove('save');
-        row.classList.remove('not-saved'); //show that the current keyCut is saved
-    }
-    const cut_name = id.slice(4);
+    checkSame(row,keyCut)
 }
 
 document.addEventListener('keydown', function(event) { // undos a deleted KeyCut
@@ -67,9 +61,7 @@ function clickAddorDelete(e){
   }
   else if(e.srcElement.classList.contains('delete')){
     console.log ('should remove', cut_name);
-    deleteKeyCut(cut_name).then((old_cut)=>{
-      del_history.push(old_cut);
-    });
+    
     const old_elem = document.getElementById(cut_name);
     console.log(old_elem);
     elem_history.push(old_elem);
@@ -79,24 +71,71 @@ function clickAddorDelete(e){
   }
   
 }
-editButten.addEventListener('click',(e)=>{
-  if(editOn){
-    for(let i = 0; i < workspaceOrDelete.length; i++){
-      workspaceOrDelete[i].innerHTML = '+';
-      workspaceOrDelete[i].classList.toggle('delete');
-    }
-    editOn=false;
+
+function deleteCut(e){
+  const btnElem = getBtnElem(e.srcElement);
+  const row = btnElem.parentNode.parentNode;
+  const cut_name = row.id;
+  deleteKeyCut(cut_name).then((old_cut)=>{
+    del_history.push(old_cut);
+  });
+  row.parentNode.removeChild(row);
+  console.log('delete this cut');
+}
+
+function saveCut(e){
+  const btnElem = getBtnElem(e.srcElement);
+  const row = btnElem.parentNode.parentNode;
+  const cutName = row.getElementsByClassName('keycut-field')[0].value;
+  const newValue = row.getElementsByClassName('url-field')[0].value;
+  if(row.id == 'newCut'){
+    //save it
+    row.id = cutName;
+    addKeyCut({shortcut: cutName, none: newValue});
+
+  } else if (row.id == cutName) {
+    //replace it
+    addKeyCut({shortcut: cutName, none: newValue});
+
   } else {
-    for(let i = 0; i < workspaceOrDelete.length; i++){
-      workspaceOrDelete[i].innerHTML = '-';
-      workspaceOrDelete[i].classList.toggle('delete');
+    //delete old
+    deleteKeyCut(row.id);
+    addKeyCut({shortcut: cutName, none: newValue});
+    //save new
+  }
+  row.classList.remove('not-saved');
+  console.log('save this cut');
+}
+
+function reloadCut(e){
+  const btnElem = getBtnElem(e.srcElement);
+  const row = btnElem.parentNode.parentNode;
+  const shortcut_field = row.getElementsByClassName('keycut-field')[0];
+  const url_field = row.getElementsByClassName('url-field')[0];
+  if(row.id == 'newCut'){
+    shortcut_field.value = '';
+    url_field.value = '';
+  } else {
+    shortcut_field.value = row.id;
+    url_field.value = keyCuts[row.id].none;
+  }
+  checkSame(row,keyCuts[row.id]);
+  console.log('reload this cut');
+}
+
+chrome.storage.onChanged.addListener(function (changes, namespace) {
+  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+    if(key === "KeyCuts"){
+      
+      // chrome.storage.sync.set({"!!!": Object.keys(newValue)});
+      keyCuts = newValue;
+    } else if (key === "KeySpaces"){
+      spaces = Object.keys(newValue);
     }
-    editOn=true;
+    
   }
 });
 
-
-const KeyCutsTable = document.getElementById('keycuts-tbl').lastChild;
 
 
 chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
@@ -114,6 +153,53 @@ newCutButton.addEventListener("click",(e)=>{
   }
   
 })
+
+function createMultiBtn(cutName="newCut"){
+  const keyCut_btn_cell = document.createElement('td');
+
+  const delete_kc_btn = document.createElement('button');
+  const delete_img = document.createElement('img');
+  delete_img.src = 'img/trash-can.png';
+  delete_img.alt = 'delete this keyCut';
+  delete_img.classList.add('secondary-img')
+
+  delete_kc_btn.appendChild(delete_img);
+  delete_kc_btn.addEventListener('click',deleteCut);
+  delete_kc_btn.classList.add('add-to-workspace');
+  delete_kc_btn.classList.add('save');
+  delete_kc_btn.classList.add('multi-btn');
+  delete_kc_btn.id = "btn-"+cutName;
+
+  keyCut_btn_cell.appendChild(delete_kc_btn);
+
+  const save_btn = document.createElement('button');
+  save_btn.addEventListener("click",saveCut);
+  const reload_btn = document.createElement('button');
+  reload_btn.addEventListener("click", reloadCut);
+  const save_img = document.createElement('img');
+  save_img.src = 'img/save.png';
+  save_img.alt = 'save changes to this space';
+  const reload_img = document.createElement('img');
+  reload_img.src = 'img/reload.png';
+  reload_img.alt = 'discard changes to this space';
+  save_img.classList.add('secondary-img');
+  reload_img.classList.add('secondary-img');
+  reload_img.classList.add('reload-img');
+  save_btn.appendChild(save_img);
+  reload_btn.appendChild(reload_img);
+
+  save_btn.classList.add('save-space-btn');
+  reload_btn.classList.add('reload-space-btn');
+  save_btn.classList.add('secondary');
+  reload_btn.classList.add('secondary');
+
+
+  keyCut_btn_cell.appendChild(reload_btn);
+  keyCut_btn_cell.appendChild(save_btn);
+  return keyCut_btn_cell;
+
+
+}
 
 function newCut(cutName, cutProps){
   const TableRow = document.createElement('tr');
@@ -143,22 +229,12 @@ function newCut(cutName, cutProps){
   keyCut_none_input.classList.add("url-field");
   keyCut_none_input.type = "text";
   
-  console.log("why are you sleeping!!!");
 
   keyCut_none.appendChild(keyCut_none_input);
 
   TableRow.appendChild(keyCut_none);
 
-  const keyCut_btn_cell = document.createElement('td');
-
-  const keyCut_btn = document.createElement('button');
-  keyCut_btn.innerHTML = '+';
-  keyCut_btn_cell.addEventListener('click',clickAddorDelete);
-  keyCut_btn_cell.classList.add('multi-btn');
-  keyCut_btn.classList.add('add-to-workspace');
-
-  keyCut_btn_cell.appendChild(keyCut_btn);
-
+  const keyCut_btn_cell = createMultiBtn(cutName);
   TableRow.appendChild(keyCut_btn_cell);
 
   KeyCutsTable.insertBefore(TableRow,document.getElementById('add-new'));
@@ -198,17 +274,7 @@ function addCut(cutName, cutProps){
 
   TableRow.appendChild(keyCut_none);
 
-  const keyCut_btn_cell = document.createElement('td');
-
-  const keyCut_btn = document.createElement('button');
-  keyCut_btn.innerHTML = '+';
-  keyCut_btn_cell.addEventListener('click',clickAddorDelete);
-  keyCut_btn_cell.classList.add('multi-btn');
-  keyCut_btn_cell.classList.add('save');
-  keyCut_btn.classList.add('add-to-workspace');
-  keyCut_btn.id= "btn-"+cutName;
-
-  keyCut_btn_cell.appendChild(keyCut_btn);
+  const keyCut_btn_cell = createMultiBtn();
 
   TableRow.appendChild(keyCut_btn_cell);
 
