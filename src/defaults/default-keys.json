@@ -1,0 +1,38 @@
+{
+    "yt": {
+        "shortcut": "yt",
+        "none": "https://www.youtube.com/",
+        "before": "https://www.youtube.com/results?search_query=",
+        "after": ""
+    },
+    "g": {
+        "shortcut": "g",
+        "none": "https://www.google.com/",
+        "before": "https://www.google.com/search?q=",
+        "after": ""
+    },
+    "ddg": {
+        "shortcut": "ddg",
+        "none": "https://duckduckgo.com/",
+        "before": "https://duckduckgo.com/?q=",
+        "after": ""
+    },
+    "z": {
+        "shortcut": "z",
+        "none": "https://www.zillow.com/",
+        "before": "https://www.zillow.com/homes/",
+        "after": "/"
+    },
+    "a": {
+        "shortcut": "a",
+        "none": "https://www.amazon.com/",
+        "before": "https://www.amazon.com/s?k=",
+        "after": ""
+    },
+    "ext": {
+        "shortcut": "ext",
+        "none": "chrome://extensions/",
+        "before": "chrome://extensions",
+        "after": ""
+    }
+  }
