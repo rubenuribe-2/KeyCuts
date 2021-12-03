@@ -4,19 +4,8 @@
 "use strict";
 
 // Where we will expose all the data we retrieve from storage.sync.
-var storageCache = {};
 var default_keys = {};
 var default_spaces = {};
-
-// Asynchronously retrieve data from storage.sync, then cache it.
-const initStorageCache = getAllStorageSyncData().then(items => {
-  // Copy the data retrieved from storage into storageCache.
-  Object.assign(storageCache, items);
-  default_keys = storageCache.KeyCuts;
-  default_spaces = storageCache.KeySpaces;
-
-  console.log("done fetching all data from storage");
-});
 
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
@@ -43,33 +32,15 @@ chrome.runtime.onInstalled.addListener(()=>{
 })
 
 
-chrome.runtime.onStartup.addListener(async ()=>{
-  try {
-    await initStorageCache;
-  } catch (e) {
-    // Handle error that occurred during storage initialization.
-  }
-  // Normal action handler logic.
+chrome.runtime.onStartup.addListener(()=>{
+    // Runs each time a profile with KeyCuts Installed is opened
+    // Retrieve keycuts from DB and store in global data structures.
+    chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
+      default_keys = KeyCuts;
+    });
+    chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{default_spaces = KeySpaces})
 });
 
-// Reads all data out of storage.sync and exposes it via a promise.
-//
-// Note: Once the Storage API gains promise support, this function
-// can be greatly simplified.
-function getAllStorageSyncData() {
-  // Immediately return a promise and start asynchronous work
-  return new Promise((resolve, reject) => {
-    // Asynchronously fetch all data from storage.sync.
-    chrome.storage.sync.get(null, (items) => {
-      // Pass any observed errors down the promise chain.
-      if (chrome.runtime.lastError) {
-        return reject(chrome.runtime.lastError);
-      }
-      // Pass the data retrieved from storage down the promise chain.
-      resolve(items);
-    });
-  });
-}
 
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
@@ -121,7 +92,7 @@ async function openSpace(links,name = ""){
     chrome.tabs.group({tabIds:tab.id},(groupId)=>{
       chrome.tabGroups.update(groupId,{title: name });
       chrome.tabs.remove(tab.id);
-      links.forEach(link=>{
+      links.reverse().forEach(link=>{
         chrome.tabs.create({url: link,active: true, index: tab.index},(newTab)=>{
           chrome.tabs.group({groupId: groupId,tabIds: newTab.id});
         });
@@ -151,9 +122,10 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
         `Storage key "${key}" in namespace "${namespace}" changed.`,
         `Old value was "${oldValue?.KeyCuts}", new value is "${newValue}".`
       );
-      chrome.storage.sync.set({"!!!": Object.keys(newValue)});
-      console.log(newValue);
-      storageCache.KeyCuts = newValue;
+      // chrome.storage.sync.set({"!!!": Object.keys(newValue)});
+      default_keys = newValue;
+    } else if (key === "KeySpaces"){
+      default_spaces = newValue;
     }
 
   }
