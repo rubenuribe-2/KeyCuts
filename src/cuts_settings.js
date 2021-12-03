@@ -13,19 +13,28 @@ function clickedRow(e){ //fired when a keycut row is clicked
 
     //rn we only want to open the url if table is ctrl/command clicked
     if(e.metaKey || e.ctrlKey){
-        const url = e.path.find(e=>{
+        const url = appendProtocol(e.path.find(e=>{
             console.log(e.nodeName);
             return e.nodeName == "TR";
-        }).getElementsByClassName('url-field')[0].value;
+        }).getElementsByClassName('url-field')[0].value);
+        console.log(url);
         window.open(url);
     }
 
 }
 
+function appendProtocol(url){
+    if(url.includes('://')){
+        return url
+    }else {
+        return 'https://' + url;
+    }
+  }
+
 function KCfromRow(row){
   const shortcut = row.getElementsByClassName('keycut-field')[0].value;
-  const none = row.getElementsByClassName('url-field')[0].value;
-  const before = row.getElementsByClassName('before-field')[0].value;
+  const none = appendProtocol(row.getElementsByClassName('url-field')[0].value);
+  const before = appendProtocol(row.getElementsByClassName('before-field')[0].value);
   const after = row.getElementsByClassName('after-field')[0].value;
 
   return {shortcut: shortcut, none: none, before: before, after: after};
@@ -66,26 +75,6 @@ document.addEventListener('keydown', function(event) { // undos a deleted KeyCut
     elem_history.pop().classList.remove("hidden");
   }
 });
-function clickAddorDelete(e){
-  // event handler for the button on the right side of KeyCuts
-  const src_elem = e.srcElement;
-  const id = src_elem.id;
-  const cut_name = id.slice(4);
-  if(e.srcElement.classList.contains('save')){
-    console.log("should save kC");
-  }
-  else if(e.srcElement.classList.contains('delete')){
-    console.log ('should remove', cut_name);
-    
-    const old_elem = document.getElementById(cut_name);
-    console.log(old_elem);
-    elem_history.push(old_elem);
-    old_elem.classList.add('hidden');
-  } else {
-    console.log('should add to workspace toggle');
-  }
-  
-}
 
 function deleteCut(e){
   const btnElem = getBtnElem(e.srcElement);
@@ -293,6 +282,7 @@ function createMultiBtn(cutName="newCut"){
 
 function newCut(cutName, cutProps){
   const TableRow = document.createElement('tr');
+  TableRow.addEventListener("click",clickedRow);
   TableRow.id = cutName;
   TableRow.classList.add('not-saved');
   const keyCut_short = document.createElement('td');

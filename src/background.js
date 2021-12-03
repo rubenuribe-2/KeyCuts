@@ -12,22 +12,31 @@ chrome.runtime.onInstalled.addListener(()=>{
 
   console.log("importing default-keys");
   var default_keys_url = chrome.runtime.getURL('./defaults/default-keys.json');
-
-  fetch(default_keys_url)
-  .then((response) => response.json())
-  .then((json_default_keys) => {
-    chrome.storage.sync.set({KeyCuts: json_default_keys}, function() {})
+  chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
+    if(!KeyCuts){
+      fetch(default_keys_url)
+      .then((response) => response.json())
+      .then((json_default_keys) => {
+        chrome.storage.sync.set({KeyCuts: json_default_keys}, function() {})
+      });
+    }
   });
+  
 
 
   console.log("importing default-spaces");
   var default_spaces_url = chrome.runtime.getURL('./defaults/default-spaces.json');
+  chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{
+    if(!KeySpaces){
+      fetch(default_spaces_url)
+      .then((response) => response.json())
+      .then((json_default_spaces) => {
+        chrome.storage.sync.set({KeySpaces: json_default_spaces}, function() {})
+      });
+    }
+  })
 
-  fetch(default_spaces_url)
-  .then((response) => response.json())
-  .then((json_default_spaces) => {
-    chrome.storage.sync.set({KeySpaces: json_default_spaces}, function() {})
-  });
+  
 
 })
 
