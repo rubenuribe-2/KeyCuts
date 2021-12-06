@@ -1,7 +1,7 @@
 {
     "name": "KeyCuts",
     "description": "A Chrome Extension that makes web navigation simple, easy, and convenient for its users.",
-    "version": "1.0",
+    "version": "0.0.0.1",
     "manifest_version": 3,
     "permissions": ["storage","tabs","tabGroups"],
     "options_page": "options.html",

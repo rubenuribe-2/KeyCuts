@@ -12,22 +12,38 @@ chrome.runtime.onInstalled.addListener(()=>{
 
   console.log("importing default-keys");
   var default_keys_url = chrome.runtime.getURL('./defaults/default-keys.json');
-
-  fetch(default_keys_url)
-  .then((response) => response.json())
-  .then((json_default_keys) => {
-    chrome.storage.sync.set({KeyCuts: json_default_keys}, function() {})
+  chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
+    if(!KeyCuts){
+      fetch(default_keys_url)
+      .then((response) => response.json())
+      .then((json_default_keys) => {
+        chrome.storage.sync.set({KeyCuts: json_default_keys}, function() {})
+      });
+    } else {
+      default_keys = KeyCuts;
+      chrome.storage.sync.set({"!!!": Object.keys(KeyCuts).concat(Object.keys(default_spaces))});
+    }
   });
+  
 
 
   console.log("importing default-spaces");
   var default_spaces_url = chrome.runtime.getURL('./defaults/default-spaces.json');
+  chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{
+    if(!KeySpaces){
+      fetch(default_spaces_url)
+      .then((response) => response.json())
+      .then((json_default_spaces) => {
+        chrome.storage.sync.set({KeySpaces: json_default_spaces}, function() {})
+      });
+    } else {
+      default_spaces = KeySpaces;
+      chrome.storage.sync.set({"!!!": Object.keys(KeySpaces).concat(Object.keys(default_keys))});
 
-  fetch(default_spaces_url)
-  .then((response) => response.json())
-  .then((json_default_spaces) => {
-    chrome.storage.sync.set({KeySpaces: json_default_spaces}, function() {})
-  });
+    }
+  })
+
+  
 
 })
 
@@ -52,7 +68,7 @@ function searchOmnibox(text){
   let navURL;
   if(default_keys[keyCut]){
     const KeyCut = default_keys[keyCut];
-    if(query){
+    if(query && KeyCut.before){
       navURL = KCtoURL(KeyCut, query);
     } else {
       navURL = KeyCut.none;
@@ -122,10 +138,11 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
         `Storage key "${key}" in namespace "${namespace}" changed.`,
         `Old value was "${oldValue?.KeyCuts}", new value is "${newValue}".`
       );
-      // chrome.storage.sync.set({"!!!": Object.keys(newValue)});
+      chrome.storage.sync.set({"!!!": Object.keys(newValue).concat(Object.keys(default_spaces))});
       default_keys = newValue;
     } else if (key === "KeySpaces"){
       default_spaces = newValue;
+      chrome.storage.sync.set({"!!!": Object.keys(newValue).concat(Object.keys(default_keys))});
     }
 
   }
