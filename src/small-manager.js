@@ -25,7 +25,7 @@ function checkUrl(){
         url_field.value = shortUrl;
         
         const ifCut = getCut(url);
-        if(ifCut){
+        if(ifCut!=""){
             //this url exists in our KeyCut Db
             kc = ifCut;
             createKC.innerText = `Update '${kc}' KeyCut`;
@@ -118,16 +118,15 @@ kc_field.addEventListener("input",(e)=>{
         //there is a kc conflict
         createKC.classList.add('conflict');
         createKC.innerText = `Replace '${value}' KeyCut`;
-    } 
-    else if (keyCuts[value] == keyCuts[kc]) {
+    } else if (!keyCuts[value]){
+        createKC.innerText = `Make '${value}' KeyCut`;
+        createKC.classList.remove('conflict')
+    } else if (keyCuts[value] == keyCuts[kc]) {
         // all good this key cut is available or is the current key cut
         createKC.innerText = `Update '${value}' KeyCut`;
         createKC.classList.remove('conflict')
         
-    } else if (!keyCuts[value]){
-        createKC.innerText = `Make '${value}' KeyCut`;
-        createKC.classList.remove('conflict')
-    }
+    } 
     
 })
 

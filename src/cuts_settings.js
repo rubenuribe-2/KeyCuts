@@ -24,11 +24,14 @@ function clickedRow(e){ //fired when a keycut row is clicked
 }
 
 function appendProtocol(url){
-    if(url.includes('://')){
-        return url
-    }else {
-        return 'https://' + url;
-    }
+  if(url.length == 0){
+    return url;
+  }
+  if(url.includes('://')){
+      return url
+  }else {
+      return 'https://' + url;
+  }
   }
 
 function KCfromRow(row){
