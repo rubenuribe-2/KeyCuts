@@ -3,61 +3,44 @@
 // import default_keys from "default-keys.js"
 "use strict";
 
-var default_keys = {
-  "yt": {   
-      shortcut: "yt",
-      none: "https://www.youtube.com/",
-      before: "https://www.youtube.com/results?search_query=",
-      after: "",
-  },
-  "g": {
-      shortcut: "g",
-      none: "https://www.google.com/",
-      before: "https://www.google.com/search?q=",
-      after: "",
-  },
-  "ddg": {
-      shortcut: "ddg",
-      none: "https://duckduckgo.com/",
-      before: "https://duckduckgo.com/?q=",
-      after: "",
-  },
-  "z": {
-      shortcut: "z",
-      none: "https://www.zillow.com/",
-      before: "https://www.zillow.com/homes/",
-      after: "/",
-  },
-  "a": {
-      shortcut: "a",
-      none: "https://www.amazon.com/",
-      before: "https://www.amazon.com/s?k=",
-      after: "",
-  },
-  "ext": {
-      shortcut: "ext",
-      none: "chrome://extensions/",
-      before: "chrome://extensions",
-      after: "",
-  }
-}
-const default_spaces = {
-  "cpstn":['https://drive.google.com/drive/u/0/folders/0ACRBX6tT21kXUk9PVA/','https://github.com/rubenuribe-2/KeyCuts/','https://canvas.tamu.edu/courses/103856/','https://howdy.tamu.edu/uPortal/f/welcome/normal/render.uP']
-
-}
-
+// Where we will expose all the data we retrieve from storage.sync.
+var default_keys = {};
+var default_spaces = {};
 
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
-  chrome.storage.sync.set({KeyCuts: default_keys}, function() {});
-  chrome.storage.sync.set({KeySpaces: default_spaces},function(){});
+
+  console.log("importing default-keys");
+  var default_keys_url = chrome.runtime.getURL('./defaults/default-keys.json');
+
+  fetch(default_keys_url)
+  .then((response) => response.json())
+  .then((json_default_keys) => {
+    chrome.storage.sync.set({KeyCuts: json_default_keys}, function() {})
+  });
+
+
+  console.log("importing default-spaces");
+  var default_spaces_url = chrome.runtime.getURL('./defaults/default-spaces.json');
+
+  fetch(default_spaces_url)
+  .then((response) => response.json())
+  .then((json_default_spaces) => {
+    chrome.storage.sync.set({KeySpaces: json_default_spaces}, function() {})
+  });
+
 })
 
 
 chrome.runtime.onStartup.addListener(()=>{
     // Runs each time a profile with KeyCuts Installed is opened
     // Retrieve keycuts from DB and store in global data structures.
+    chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
+      default_keys = KeyCuts;
+    });
+    chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{default_spaces = KeySpaces})
 });
+
 
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
@@ -71,8 +54,7 @@ function searchOmnibox(text){
     const KeyCut = default_keys[keyCut];
     if(query){
       navURL = KCtoURL(KeyCut, query);
-    }
-    else {
+    } else {
       navURL = KeyCut.none;
     }
   } else {
@@ -96,8 +78,8 @@ function KCtoURL(KeyCut, query){
 };
 
 async function NavigateTo(url){
-    //navigates current tab to url
-    //really it closes the current tab and creates a new one in the same place
+    // navigates current tab to url
+    // really it closes the current tab and creates a new one in the same place
     const tab = await getCurrentTab();
     console.log(tab);
     chrome.tabs.remove(tab.id);
@@ -110,13 +92,13 @@ async function openSpace(links,name = ""){
     chrome.tabs.group({tabIds:tab.id},(groupId)=>{
       chrome.tabGroups.update(groupId,{title: name });
       chrome.tabs.remove(tab.id);
-      links.forEach(link=>{
+      links.reverse().forEach(link=>{
         chrome.tabs.create({url: link,active: true, index: tab.index},(newTab)=>{
           chrome.tabs.group({groupId: groupId,tabIds: newTab.id});
         });
       });
-    }); 
-    
+    });
+
 }
 
 async function  getCurrentTab(){
@@ -140,10 +122,11 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
         `Storage key "${key}" in namespace "${namespace}" changed.`,
         `Old value was "${oldValue?.KeyCuts}", new value is "${newValue}".`
       );
-      chrome.storage.sync.set({"!!!": Object.keys(newValue)});
-      console.log(newValue);
+      // chrome.storage.sync.set({"!!!": Object.keys(newValue)});
       default_keys = newValue;
+    } else if (key === "KeySpaces"){
+      default_spaces = newValue;
     }
-    
+
   }
 });

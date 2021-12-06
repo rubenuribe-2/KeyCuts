@@ -47,7 +47,7 @@ tr{
     display: none;
 }
 .not-saved{
-    background: #e73d26 !important;
+    background: #db9c94 !important;
 }
 tr:not(.hidden):nth-of-type(odd){
     background: #2E2E3A;
@@ -67,18 +67,48 @@ tr:not(.hidden):nth-of-type(odd){
     height: 100%;
     background: none;
     color: #FEEFE5;
+    cursor: pointer;
 }
 .add-to-workspace:hover{
-    background: #5efc8d86;
+    background: #e73d2686;
     
     transform: scale(1.01);
     color: #2E2E3A;
 }
 .add-to-workspace:hover.delete{
     background: #e73d2686;
-    transform: scaleX(2);
     color: #2E2E3A;
 }
+.secondary{
+    display: none;
+    width: 100%;
+    height: 50%;
+    background: none;
+    border: black 1px solid;
+    transform: 0.2s;
+    cursor: pointer;
+}
+.secondary:hover{
+    background:rgb(94, 252, 141);
+    transform: scale(1.01);
+}
+.secondary-img{
+    width: 25px;
+}
+.secondary > .secondary-img{
+    filter: invert(100%);
+}
+.reload-img:hover{
+    transform: rotate(-360deg);
+    transition: 1s;
+}
+.not-saved > * > .secondary{
+    display: block;
+}
+.not-saved > * > .add-to-workspace{
+    display: none;
+}
+
 #add-new-button, #add-new-space-button{
     width: 100%;
     height: 100%;
@@ -92,12 +122,14 @@ tr:not(.hidden):nth-of-type(odd){
 #add-new > td, #add-new-space > td{
     color: #2E2E3A;
 }
-.not-saved > * > .add-to-workspace:after{
+/* .not-saved > * > .add-to-workspace:after{
     content: "save";
     visibility: visible;
-}
+    
+} */
 .not-saved > * > .add-to-workspace{
     visibility: hidden;
+    transform: none;
 }
 #toggle-edit, #toggle-edit-space{
     width: 100%;
@@ -174,4 +206,85 @@ tr:not(.hidden):nth-of-type(odd){
 .url-field{
     width: 80%;
     margin: 10px;
+}
+.add_new_link{
+    width: 80%;
+    background:rgb(94, 252, 141);
+    border-radius: 10px;
+    margin: 10px;
+    cursor: pointer;
+}
+.add_new_link:hover{
+    transform: scaleY(1.2);
+}
+.delete-link-btn{
+    height: 15px;
+    width: 15px;
+    padding: 20px;
+    margin: 10px;
+    margin-left: 0;
+    background: #EB4833;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.delete-link-btn:hover{
+    transform: scale(1.1);
+}
+.delete-link-btn > .trash-img{
+    height: 15px;
+    width: 15px;
+}
+.space-link-holder{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.space-link-holder:first-child:nth-last-child(2) > .delete-link-btn{
+    display: none;
+}
+
+.bottom-fields, .top-fields{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.bottom-fields > input {
+    margin: 10px;
+}
+.bottom-fields > p {
+    color: #FEEFE5
+}
+.more-img{
+    filter: invert(100);
+    height: 15px;
+    width: 15px;
+}
+.more-btn{
+    height: 15px;
+    width: 15px;
+    padding: 20px;
+    margin: 10px;
+    margin-left: 0;
+    background: #797979;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.more-btn:hover{
+    transform: scale(1.1);
+}
+.bottom-fields{
+    display: none;
+}
+.cut-field-holder.advanced > .bottom-fields{
+    display: flex;
 }
