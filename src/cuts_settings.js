@@ -44,6 +44,10 @@ function onKeyCutChange(e){
     if(!checkSame(row,keyCut)){
         row.getElementsByClassName('multi-btn')[0].classList.add('save');
         row.classList.add('not-saved'); //display that the keyCut is currently not saved
+        if(row.getElementsByClassName(keyCut.shortcut && row.getElementsByClassName('keycut-field')[0].value != keyCut.shortcut)){
+          //there is a kc conflict
+          console.log('conflicting keycuts');
+      } 
     } else {
         row.getElementsByClassName('multi-btn')[0].classList.remove('save');
         row.classList.remove('not-saved'); //show that the current keyCut is saved
@@ -52,7 +56,7 @@ function onKeyCutChange(e){
 }
 
 document.addEventListener('keydown', function(event) { // undos a deleted KeyCut
-  if (event.ctrlKey || event.metaKey && event.key === 'z') {
+  if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
     addKeyCut(del_history.pop());
     elem_history.pop().classList.remove("hidden");
   }
