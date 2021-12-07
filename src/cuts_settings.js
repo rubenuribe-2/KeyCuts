@@ -68,7 +68,7 @@ function onKeyCutChange(e){
     console.log(row);
 
     const id = row.id;
-    const keyCut = keyCuts[id];
+    const keyCut = keyCuts[id] ? keyCuts[id] : {shortcut: "", none: "", before: "", after: ""};
     checkSame(row,keyCut)
 }
 
