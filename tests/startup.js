@@ -36,7 +36,6 @@ async function createShortcuts(page,no_shortcuts){
             }       
         }
     }
-    // console.log(newCutBtn);
 }
 
 (async () => {
