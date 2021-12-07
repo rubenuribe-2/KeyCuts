@@ -53,13 +53,28 @@ chrome.runtime.onStartup.addListener(()=>{
     // Retrieve keycuts from DB and store in global data structures.
     chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
       default_keys = KeyCuts;
+      console.log(default_keys);
     });
-    chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{default_spaces = KeySpaces})
+    chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{
+      default_spaces = KeySpaces
+      console.log(default_spaces);
+    })
 });
 
 
 function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
+  if(!default_spaces){
+    chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{
+      default_spaces = KeySpaces
+    })
+  }
+  if(!default_keys){
+    chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
+      default_keys = KeyCuts;
+      console.log(default_keys);
+    });
+  }
   const t0 = performance.now() | 0;
   const splitText = text.split(' ');
   const keyCut = splitText[0];
@@ -134,10 +149,6 @@ chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
 chrome.storage.onChanged.addListener(function (changes, namespace) {
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
     if(key === "KeyCuts"){
-      console.log(
-        `Storage key "${key}" in namespace "${namespace}" changed.`,
-        `Old value was "${oldValue?.KeyCuts}", new value is "${newValue}".`
-      );
       chrome.storage.sync.set({"!!!": Object.keys(newValue).concat(Object.keys(default_spaces))});
       default_keys = newValue;
     } else if (key === "KeySpaces"){
