@@ -43,6 +43,44 @@ async function createShortcuts(page,no_shortcuts){
     }
 }
 
+async function popupTests(popup,extensionID){
+    //test responsiveness of make KeyCut button
+    await popup.goto('chrome-extension://'+extensionID+'/popup.html');
+    const button = await popup.$('#keycut-btn');
+    //test what if blank:
+    const shortcut = await popup.$('#KeyCut-field');
+    var inputValue = await popup.$eval('#KeyCut-field', el => el.value);
+    for (let i = 0; i < inputValue.length; i++) {
+        await shortcut.press('Backspace');
+    }
+    var button_content = await popup.$eval('#keycut-btn', el => el.innerHTML);
+    console.assert(button_content === ':(', 'BLANK KC FIELD IN POPUP IS BEING ACCEPTED');
+    
+    
+    // test what if override
+    await shortcut.type('a');
+    button_content = await popup.$eval('#keycut-btn', el => el.innerHTML);
+    console.assert(button_content === "Replace 'a' KeyCut", 'A CONFLICT IS NOT BEING DISPLAYED FOR KEYCUTS');
+
+    // test when what if new after being overide & empty
+    await shortcut.type('new');
+    button_content = await popup.$eval('#keycut-btn', el => el.innerHTML);
+    console.assert(button_content === "Make 'anew' KeyCut", 'BUTTON IS NOT REVERTING BACK TO MAKE WHEN AVAILABLE');
+    //test what if overide a space 
+    inputValue = await popup.$eval('#KeyCut-field', el => el.value);
+    for (let i = 0; i < inputValue.length; i++) {
+        await shortcut.press('Backspace');
+    }
+    await shortcut.type('cpstn');
+    button_content = await popup.$eval('#keycut-btn', el => el.innerHTML);
+    console.assert(button_content === "Replace 'cpstn' KeySpace", 'A CONFLICT IS NOT BEING DISPLAYED FOR KEYSPACES');
+    //test after we click
+    await button.click();
+    button_content = await popup.$eval('#keycut-btn', el => el.innerHTML);
+    console.assert(button_content === "Update 'cpstn' KeyCut", 'UI NOT PROPERLY UPDATING ON BUTTON CLICK AFTER SPACES CONFLICT');
+    console.log(button_content);
+}
+
 (async () => {
     const pathToExtension = require('path').resolve(__dirname, '../src');
     const browser = await puppeteer.launch({
@@ -67,35 +105,10 @@ async function createShortcuts(page,no_shortcuts){
         await settings.goto('chrome-extension://'+extensionID+'/settings.html');
         createShortcuts(settings,51);
     }   if(args[0]==='popup') {
-        //test responsiveness of make KeyCut button
-        await settings.goto('chrome-extension://'+extensionID+'/popup.html');
-        const button = await settings.$('#keycut-btn');
-        //test what if blank:
-        const shortcut = await settings.$('#KeyCut-field');
-        const inputValue = await settings.$eval('#KeyCut-field', el => el.value);
-        console.log(inputValue);
-        for (let i = 0; i < inputValue.length; i++) {
-            await shortcut.press('Backspace');
-        }
-        var button_content = await settings.$eval('#keycut-btn', el => el.innerHTML);
-        console.assert(button_content === ':(', 'BLANK KC FIELD IN POPUP IS BEING ACCEPTED');
-        
-        
-        // test what if override
-        await shortcut.type('a');
-        button_content = await settings.$eval('#keycut-btn', el => el.innerHTML);
-        console.assert(button_content === "Replace 'a' KeyCut", 'a is not saying replaced IS BEING ACCEPTED');
-
-
-
-
-        
-        const url = await settings.$('#url-field');
+        await popupTests(settings,extensionID);
+        // await browser.close();
         // await shortcut.type('a');
         // console.log(shortcut);
     }
-
-
-    // await browser.close();
     console.log("test completed")
 })();
