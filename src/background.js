@@ -7,6 +7,24 @@
 var default_keys = {};
 var default_spaces = {};
 
+
+async function refetch_keys(){
+  return new Promise((res,rej) => {
+    chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
+      default_keys = KeyCuts;
+      res();
+    });
+  });
+}
+async function refetch_spaces(){
+  return new Promise((res,rej) => {
+    chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{
+      default_spaces = KeySpaces;
+      res();
+    })
+  });
+}
+
 chrome.runtime.onInstalled.addListener(()=>{
   //runs when the function is updated or installed for the first time
 
@@ -64,16 +82,11 @@ chrome.runtime.onStartup.addListener(()=>{
 
 async function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
-  if(!default_spaces){
-    await chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{
-      default_spaces = KeySpaces
-    })
+  if(Object.keys(default_keys).length === 0){
+    await refetch_keys();
   }
-  if(!default_keys){
-    await chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
-      default_keys = KeyCuts;
-      console.log(default_keys);
-    });
+  if(Object.keys(default_spaces).length === 0){
+    await refetch_spaces();
   }
   const t0 = performance.now() | 0;
   const splitText = text.split(' ');
