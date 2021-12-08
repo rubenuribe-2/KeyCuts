@@ -62,15 +62,15 @@ chrome.runtime.onStartup.addListener(()=>{
 });
 
 
-function searchOmnibox(text){
+async function searchOmnibox(text){
   // Encode user input for special characters , / ? : @ & = + $ #
   if(!default_spaces){
-    chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{
+    await chrome.storage.sync.get(['KeySpaces'],({KeySpaces} = keySpaces)=>{
       default_spaces = KeySpaces
     })
   }
   if(!default_keys){
-    chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
+    await chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
       default_keys = KeyCuts;
       console.log(default_keys);
     });
@@ -79,6 +79,7 @@ function searchOmnibox(text){
   const splitText = text.split(' ');
   const keyCut = splitText[0];
   const query = splitText.slice(1).join(' ');
+  console.log(default_keys);
   console.log({query});
   let navURL;
   if(default_keys[keyCut]){
