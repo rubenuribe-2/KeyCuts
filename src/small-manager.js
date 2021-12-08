@@ -1,10 +1,11 @@
-import {abreviateTab, getActiveTab, addKeyCut, storeKC} from './utils.js';
+import {abreviateTab, getActiveTab, addKeyCut, storeKC, deleteKeyCut, deleteKeySpace} from './utils.js';
 
 const url_field = document.getElementById('url-field');
 const kc_field = document.getElementById('KeyCut-field');
 const createKC = document.getElementById("keycut-btn");
 
 var keyCuts;
+var spaces;
 let urls_set = {};
 let beforeUrls_set = {};
 let urls = [];
@@ -78,18 +79,25 @@ chrome.storage.sync.get(['KeyCuts'], ({KeyCuts} = keycuts)=>{
     }
     checkUrl();
   });
+chrome.storage.sync.get(['KeySpaces'], ({KeySpaces} = keyspaces)=>{
+    spaces = Object.keys(KeySpaces);
+  });
 
 
 
 
 if (createKC){
     createKC.addEventListener("click",()=>{
+        if (createKC.classList.contains('deactive')) return
         const abv = kc_field.value.split(" ").join("");
         // re append protocall if it was https\/
         const noSearchUrl = url_field.value.search("://") === -1 ? "https://" + url_field.value: url_field.value;
         const searchURL = storeKC(url_field.value);
         if(!kc_exists()){
             //for making a new keyCut
+            if(spaces.includes(abv)){
+                deleteKeySpace(abv);
+            }
             kc = abv;
             addKeyCut({shortcut:abv, none: noSearchUrl, before: searchURL});
             createKC.innerText = `Update '${kc}' KeyCut`;            
@@ -118,7 +126,10 @@ kc_field.addEventListener("input",(e)=>{
         //there is a kc conflict
         createKC.classList.add('conflict');
         createKC.innerText = `Replace '${value}' KeyCut`;
-    } else if (!keyCuts[value]){
+    } else if (spaces.includes(value)) {
+        createKC.classList.add('conflict');
+        createKC.innerText = `Replace '${value}' KeySpace`;
+    }else if (!keyCuts[value]){
         createKC.innerText = `Make '${value}' KeyCut`;
         createKC.classList.remove('conflict')
     } else if (keyCuts[value] == keyCuts[kc]) {

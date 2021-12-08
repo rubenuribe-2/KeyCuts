@@ -136,7 +136,7 @@ export async function abreviateTab(tab){ // -> String
 
 
 export async function storeKC(url){
-    const tURL = getActiveURL();
+    const tURL = getActiveUrl();
     const splits = [];
     var bURL;
   
@@ -152,6 +152,7 @@ export async function storeKC(url){
       splits = tURL.split("search_query=");
       bURL = splits[0].concat("search_query=");
     }
+    console.log({bURL});
     return bURL;
 };
   
