@@ -3,7 +3,7 @@
     "description": "A Chrome Extension that makes web navigation simple, easy, and convenient for its users.",
     "version": "0.0.0.2",
     "manifest_version": 3,
-    "permissions": ["storage","tabs","tabGroups"],
+    "permissions": ["storage","tabs","tabGroups","history"],
     "options_page": "options.html",
     "omnibox": {
       "keyword": "!"

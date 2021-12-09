@@ -1,4 +1,4 @@
-import { addKeyCut, deleteKeyCut, getBtnElem } from './utils.js';
+import { addKeyCut, deleteKeyCut, getBeforeUrl, getBtnElem } from './utils.js';
 
 const newCutButton = document.getElementById('add-new-button');
 const KeyCutsTable = document.getElementById('keycuts-tbl').lastChild;
@@ -34,12 +34,16 @@ function appendProtocol(url){
   }
   }
 
-function KCfromRow(row){
+async function KCfromRow(row){
   const shortcut = row.getElementsByClassName('keycut-field')[0].value;
   const none = appendProtocol(row.getElementsByClassName('url-field')[0].value);
-  const before = appendProtocol(row.getElementsByClassName('before-field')[0].value);
+  let before = appendProtocol(row.getElementsByClassName('before-field')[0].value)
   const after = row.getElementsByClassName('after-field')[0].value;
-
+  if(before === ''){
+    before = await getBeforeUrl(none);
+  }
+  console.log(shortcut);
+  console.log(before);
   return {shortcut: shortcut, none: none, before: before, after: after};
 }
 
@@ -90,10 +94,10 @@ function deleteCut(e){
   console.log('delete this cut');
 }
 
-function saveCut(e){
+async function saveCut(e){
   const btnElem = getBtnElem(e.srcElement);
   const row = btnElem.parentNode.parentNode;
-  const newKC = KCfromRow(row);
+  const newKC = await KCfromRow(row);
   if(row.id == 'newCut'){
     //save it
     row.id = newKC.shortcut;
@@ -106,6 +110,7 @@ function saveCut(e){
   } else {
     //delete old
     deleteKeyCut(row.id);
+    row.id = newKC.shortcut;
     addKeyCut(newKC);
     //save new
   }
