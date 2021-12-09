@@ -1,4 +1,4 @@
-import {abreviateTab, getActiveTab, addKeyCut, storeKC, deleteKeyCut, deleteKeySpace} from './utils.js';
+import {abreviateTab, getActiveTab, addKeyCut, storeKC, deleteKeyCut, deleteKeySpace, getBeforeUrl} from './utils.js';
 
 const url_field = document.getElementById('url-field');
 const kc_field = document.getElementById('KeyCut-field');
@@ -87,12 +87,14 @@ chrome.storage.sync.get(['KeySpaces'], ({KeySpaces} = keyspaces)=>{
 
 
 if (createKC){
-    createKC.addEventListener("click",()=>{
+    createKC.addEventListener("click",async ()=>{
         if (createKC.classList.contains('deactive')) return
         const abv = kc_field.value.split(" ").join("");
         // re append protocall if it was https\/
         const noSearchUrl = url_field.value.search("://") === -1 ? "https://" + url_field.value: url_field.value;
-        const searchURL = storeKC(url_field.value);
+        let searchURL = await getBeforeUrl(noSearchUrl);
+        console.log(searchURL);
+        
         if(!kc_exists()){
             //for making a new keyCut
             if(spaces.includes(abv)){
@@ -100,10 +102,14 @@ if (createKC){
             }
             kc = abv;
             addKeyCut({shortcut:abv, none: noSearchUrl, before: searchURL});
-            createKC.innerText = `Update '${kc}' KeyCut`;            
+            createKC.innerText = `Update '${kc}' KeyCut`;  
+            createKC.classList.remove('conflict');          
         } else {
             //update?
-            addKeyCut({shortcut:abv, none: noSearchUrl});
+            if(searchURL === ''){
+                searchURL = keyCuts[abv]?.before || ''; //keep old search if possible
+            }
+            addKeyCut({shortcut:abv, none: noSearchUrl, before: searchURL});
         }
     });
 }
