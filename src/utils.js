@@ -179,7 +179,7 @@ export async function getBeforeUrl(url){
                 // let protocall = ["",0];
                 const proto = potentialSearches.reduce((protocall,search) => {
                     for(const count in counts){
-                        if(search.url.includes(count)){
+                        if(search.url.includes(count) && search.url.includes(baseUrl)){
                             console.log('found');
                             if(protocall[1]>=counts[count]++){
                                 protocall = [count,counts[count],search.url.split(count)[0]+count];
@@ -203,7 +203,6 @@ export async function getBeforeUrl(url){
                 counts[count] = results.filter(res=>res.url.includes(count));
                 console.log(counts[count]);
                 if(counts[count].length>best[1]){
-                    console.log('bestie');
                     best = [count,counts[count].length]
                 }
             }
@@ -212,7 +211,6 @@ export async function getBeforeUrl(url){
                 res(counts[best[0]][0].url.split(best[0])[0] + best[0]);
                 return;
             } else {
-                console.log('here')
                  res('');
                  return;
             }
