@@ -26,6 +26,11 @@ to run the popup tests run the command
 ```
 node tests/startup.js popup
 ```
+
+# Contribution
+Please see contributing.md for guidance with contributing.
+
+
 # Files
 
 ##  Manifest.json
@@ -33,6 +38,27 @@ refer to chromes https://developer.chrome.com/docs/extensions/mv3/intro/ documen
 
 ## utils.js
 Has a bunch of utility functions that can be imported into other files
+
+### addKeySpace(keyspace, list)
+    keyspace = string,
+    list = [URLs]
+    adds a keyspace to the database
+
+### deleteKeySpace(shortcut)
+    shortcut = keyspaceShortcut
+    Removes the given keyspace from the database
+
+### addKeyCut(keyCut)
+    keycut = keycutObject
+    adds the keycut to the database
+    if a keycut with that shortcut allready exists it replaces it
+### deleteKeyCut(shortcut)
+    shortcut = string
+    removes the given keycut from the database.
+
+### getBeforeURL(url)
+    This is where the searchAI lives.
+    This function parses the history to find a good "before" url to search the site referanced by the given provided url.
 
 ## popup
 
