@@ -52,3 +52,24 @@ This code controls the keycuts tab, and takes care of syncing with the database 
 ### spaces_settings.js
 This code controls the spaces tab, and takes care of syncing with the Database and editing keycuts
 
+
+## Background
+This service worker runs all the time when the extension is installed
+
+refetch_keys(), and refetch_spaces() reload the local variables that hold the varios spaces and KeyCuts.
+
+### searchOmnibox(text)
+This function runs everytime the omnibox is sed with the "!" keyword. text is the query that comes after the "!".
+This will get the first argument and find the KeySpace or KeyCut associated with it and open the desired webPages
+
+### openSpace(space)
+Creates a tab group, and opens the pages in the given space in that tab group
+
+### NavigateTo(url)
+Navigates the current tab to the url provided.
+
+### KCtoURL(KeyCut, query)
+The keycut is a keycutObject and the query will be inserted inbetween the before and after of the KeyCut.
+
+### getCurrentTab()
+returns the tab that is currently open in the browser window https://developer.chrome.com/docs/extensions/reference/tabs/#type-Tab
